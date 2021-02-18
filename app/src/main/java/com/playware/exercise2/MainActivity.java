@@ -4,84 +4,94 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.livelife.motolibrary.MotoConnection;
 import com.livelife.motolibrary.OnAntEventListener;
 
-import java.util.Arrays;
-
 public class MainActivity extends AppCompatActivity implements OnAntEventListener {
 
     MotoConnection connection;
-    Button pairingButton;
-    Button gameButton;
-    TextView statusText;
-    boolean isPairing = false;
+    Button pairingButton, startGameButton;
+    boolean isPairing;
+    TextView statusTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        connection = MotoConnection.getInstance();
+
+        connection=MotoConnection.getInstance();
         connection.startMotoConnection(MainActivity.this);
-        connection.saveRfFrequency(5*10+6);
-        connection.setDeviceId(5);
+        connection.saveRfFrequency(5*10+6);         //(Group No.)*10+6
+        connection.setDeviceId(5);              //Your group number
         connection.registerListener(MainActivity.this);
-        statusText = findViewById(R.id.statusText);
+
+        statusTextView = findViewById(R.id.statusTextView);
         pairingButton = findViewById(R.id.pairingButton);
-        pairingButton.setOnClickListener( ev -> {
-            if(isPairing){
-                connection.pairTilesStart();
-                pairingButton.setText("Stop Pairing");
-            }else{
-                connection.pairTilesStop();
-                pairingButton.setText("Start Pairing");
+        startGameButton = findViewById(R.id.startGameButton);
+
+        startGameButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                connection.unregisterListener(MainActivity.this);
+                Intent i = new Intent(MainActivity.this, ColourRaceActivity.class);
+                startActivity(i);
             }
-            isPairing = !isPairing;
         });
-        gameButton = findViewById(R.id.playGameButton);
-        gameButton.setOnClickListener(v -> {
-            Intent intent = new Intent(v.getContext(), ColourRaceActivity.class);
-            v.getContext().startActivity(intent);
+
+        pairingButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                if(!isPairing){
+                    connection.pairTilesStart();
+                    pairingButton.setText("Stop pairing!");
+                }else{
+                    connection.pairTilesStop();
+                    pairingButton.setText("Start pairing!");
+                }
+                isPairing = !isPairing;
+            }
         });
     }
 
     @Override
     public void onMessageReceived(byte[] bytes, long l) {
-        System.out.println(Arrays.toString(bytes));
+
     }
 
     @Override
     public void onAntServiceConnected() {
-
+        connection.setAllTilesToInit();
     }
 
     @Override
-    public void onNumbersOfTilesConnected(int i) {
-        System.out.println("Number of tiles con: " + i);
-        runOnUiThread(() -> statusText.setText(i + " Number of tiles connected"));
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        connection.startMotoConnection(MainActivity.this);
-        connection.registerListener(MainActivity.this);
+    public void onNumbersOfTilesConnected(final int i) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                statusTextView.setText(i +" connected tiles");
+            }
+        });
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        connection.stopMotoConnection();
-        connection.unregisterListener(MainActivity.this);
     }
-
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        connection.registerListener(MainActivity.this);
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();
         connection.stopMotoConnection();
         connection.unregisterListener(MainActivity.this);
     }
+
+
 }

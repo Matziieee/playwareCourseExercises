@@ -1,6 +1,6 @@
 package com.playware.exercise2;
 
-import android.widget.LinearLayout;
+import android.util.Log;
 
 import com.livelife.motolibrary.AntData;
 import com.livelife.motolibrary.Game;
@@ -13,44 +13,47 @@ import static com.livelife.motolibrary.AntData.LED_COLOR_OFF;
 import static com.livelife.motolibrary.AntData.LED_COLOR_RED;
 
 public class ColourRaceManager extends Game {
+
     MotoConnection connection = MotoConnection.getInstance();
 
+    ColourRaceManager() {
+        setName("Color Race");
+        setDescription("A nice game");
 
-     public ColourRaceManager(){
-         setName("Color Race");
-         setDescription("A nice game");
+        GameType gt = new GameType(1, GameType.GAME_TYPE_TIME, 30,"1 player 30 sec",1);
+        addGameType(gt);
 
-         GameType gt = new GameType(1, GameType.GAME_TYPE_TIME, 30,"1 player 30 sec",1);
-         addGameType(gt);
+        GameType gt2 = new GameType(2, GameType.GAME_TYPE_TIME, 60,"1 player 1 min",1);
+        addGameType(gt2);
 
-         GameType gt2 = new GameType(2, GameType.GAME_TYPE_TIME, 60,"1 player 1 min",1);
-         addGameType(gt2);
-
-         GameType gt3 = new GameType(3, GameType.GAME_TYPE_TIME, 60*2,"1 player 2 min",1);
-         addGameType(gt3);
+        GameType gt3 = new GameType(3, GameType.GAME_TYPE_TIME, 60*2,"1 player 2 min",1);
+        addGameType(gt3);
     }
-
-    private void setAllIdleAndSetNewTargetTile(){
-        connection.setAllTilesIdle(LED_COLOR_OFF);
-        int randomTile = connection.randomIdleTile();
-        connection.setTileColor(LED_COLOR_GREEN, randomTile);
-    }
-
 
     @Override
     public void onGameStart() {
         super.onGameStart();
-        setAllIdleAndSetNewTargetTile();
+
+        connection.setAllTilesIdle(LED_COLOR_OFF);
+
+        int randomTile = connection.randomIdleTile();
+        Log.i("TAG", "random id " + randomTile);
+        connection.setTileColor(LED_COLOR_GREEN, randomTile);
     }
 
     @Override
     public void onGameUpdate(byte[] message) {
         super.onGameUpdate(message);
+
         int event = AntData.getCommand(message);
-        int color = AntData.getColorFromPress(message);
-        if(event == AntData.EVENT_PRESS && color!=2){
+        int color= AntData.getColorFromPress(message);
+        if (event == AntData.EVENT_PRESS && color!=LED_COLOR_OFF)
+        {
             incrementPlayerScore(1,0);
-            setAllIdleAndSetNewTargetTile();
+
+            int randomTile = connection.randomIdleTile();
+            connection.setAllTilesIdle(LED_COLOR_OFF);
+            connection.setTileColor(LED_COLOR_BLUE, randomTile);
         }
     }
 
@@ -61,3 +64,4 @@ public class ColourRaceManager extends Game {
         connection.setAllTilesBlink(4,LED_COLOR_RED);
     }
 }
+
