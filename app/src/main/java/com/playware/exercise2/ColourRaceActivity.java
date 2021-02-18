@@ -10,11 +10,13 @@ import android.widget.LinearLayout;
 import com.livelife.motolibrary.Game;
 import com.livelife.motolibrary.GameType;
 import com.livelife.motolibrary.MotoConnection;
+import com.livelife.motolibrary.MotoSound;
 import com.livelife.motolibrary.OnAntEventListener;
 
 public class ColourRaceActivity extends AppCompatActivity implements OnAntEventListener {
 
     MotoConnection connection = MotoConnection.getInstance();
+    MotoSound motoSound = MotoSound.getInstance();
     LinearLayout gameTypeContainer;
     ColourRaceManager colorRaceManager;
 
@@ -28,6 +30,7 @@ public class ColourRaceActivity extends AppCompatActivity implements OnAntEventL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        motoSound.initializeSounds(ColourRaceActivity.this);
         setContentView(R.layout.activity_game);
         connection.registerListener(this);
         connection.setAllTilesToInit();

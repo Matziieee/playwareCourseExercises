@@ -6,6 +6,7 @@ import com.livelife.motolibrary.AntData;
 import com.livelife.motolibrary.Game;
 import com.livelife.motolibrary.GameType;
 import com.livelife.motolibrary.MotoConnection;
+import com.livelife.motolibrary.MotoSound;
 
 import static com.livelife.motolibrary.AntData.LED_COLOR_BLUE;
 import static com.livelife.motolibrary.AntData.LED_COLOR_GREEN;
@@ -15,6 +16,7 @@ import static com.livelife.motolibrary.AntData.LED_COLOR_RED;
 public class ColourRaceManager extends Game {
 
     MotoConnection connection = MotoConnection.getInstance();
+    MotoSound motoSound = MotoSound.getInstance();
 
     ColourRaceManager() {
         setName("Color Race");
@@ -49,8 +51,8 @@ public class ColourRaceManager extends Game {
         int color= AntData.getColorFromPress(message);
         if (event == AntData.EVENT_PRESS && color!=LED_COLOR_OFF)
         {
+            motoSound.playPianoSound(0);
             incrementPlayerScore(1,0);
-
             int randomTile = connection.randomIdleTile();
             connection.setAllTilesIdle(LED_COLOR_OFF);
             connection.setTileColor(LED_COLOR_BLUE, randomTile);
