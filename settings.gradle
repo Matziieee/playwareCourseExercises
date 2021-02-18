@@ -1,0 +1,3 @@
+include ':moto_library-release'
+include ':app'
+rootProject.name = "Exercise2"
