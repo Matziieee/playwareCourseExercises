@@ -13,6 +13,9 @@ import com.livelife.motolibrary.MotoConnection;
 import com.livelife.motolibrary.MotoSound;
 import com.livelife.motolibrary.OnAntEventListener;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class ColourRaceActivity extends AppCompatActivity implements OnAntEventListener {
 
     MotoConnection connection = MotoConnection.getInstance();
@@ -41,12 +44,10 @@ public class ColourRaceActivity extends AppCompatActivity implements OnAntEventL
         for (final GameType gt : colorRaceManager.getGameTypes()) {
             Button b = new Button(this);
             b.setText(gt.getName());
-            b.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    colorRaceManager.selectedGameType = gt;
-                    colorRaceManager.startGame();
-                }
+            b.setOnClickListener(v -> {
+                motoSound.playStart();
+                colorRaceManager.selectedGameType = gt;
+                colorRaceManager.startGame();
             });
             gameTypeContainer.addView(b);
         }

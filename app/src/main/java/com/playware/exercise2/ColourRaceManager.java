@@ -40,13 +40,13 @@ public class ColourRaceManager extends Game {
 
         int randomTile = connection.randomIdleTile();
         Log.i("TAG", "random id " + randomTile);
+        motoSound.speak("Step on green to start");
         connection.setTileColor(LED_COLOR_GREEN, randomTile);
     }
 
     @Override
     public void onGameUpdate(byte[] message) {
         super.onGameUpdate(message);
-
         int event = AntData.getCommand(message);
         int color= AntData.getColorFromPress(message);
         if (event == AntData.EVENT_PRESS && color!=LED_COLOR_OFF)
@@ -54,8 +54,11 @@ public class ColourRaceManager extends Game {
             motoSound.playPianoSound(0);
             incrementPlayerScore(1,0);
             int randomTile = connection.randomIdleTile();
-            connection.setAllTilesIdle(LED_COLOR_OFF);
+            connection.setAllTilesColor(LED_COLOR_OFF);
             connection.setTileColor(LED_COLOR_BLUE, randomTile);
+        }
+        else {
+            motoSound.playAnimalSound(1);
         }
     }
 
@@ -64,6 +67,7 @@ public class ColourRaceManager extends Game {
         super.onGameEnd();
 
         connection.setAllTilesBlink(4,LED_COLOR_RED);
+        motoSound.playStop();
     }
 }
 
