@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements OnAntEventListene
     protected void onDestroy() {
         super.onDestroy();
         connection.stopMotoConnection();
-        connection.unregisterListener(MainActivity.this);
+        connection.unregisterListener(this);
     }
 
 

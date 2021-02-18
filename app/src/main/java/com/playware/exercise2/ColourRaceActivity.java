@@ -30,7 +30,7 @@ public class ColourRaceActivity extends AppCompatActivity implements OnAntEventL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        motoSound.initializeSounds(ColourRaceActivity.this);
+        motoSound.initializeSounds(this);
         setContentView(R.layout.activity_game);
         connection.registerListener(this);
         connection.setAllTilesToInit();
@@ -65,5 +65,12 @@ public class ColourRaceActivity extends AppCompatActivity implements OnAntEventL
     @Override
     public void onNumbersOfTilesConnected(int i) {
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        connection.stopMotoConnection();
+        connection.unregisterListener(this);
     }
 }
