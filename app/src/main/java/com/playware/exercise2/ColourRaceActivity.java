@@ -47,39 +47,6 @@ public class ColourRaceActivity extends AppCompatActivity implements OnAntEventL
             });
             gameTypeContainer.addView(b);
         }
-
-        colorRaceManager.setOnGameEventListener(new Game.OnGameEventListener() {
-            @Override
-
-            public void onGameTimerEvent(int i) {
-
-            }
-
-            @Override
-            public void onGameScoreEvent(int i, int i1) {
-
-            }
-
-            @Override
-            public void onGameStopEvent() {
-
-            }
-
-            @Override
-            public void onSetupMessage(String s) {
-
-            }
-
-            @Override
-            public void onGameMessage(String s) {
-
-            }
-
-            @Override
-            public void onSetupEnd() {
-
-            }
-        });
     }
 
     @Override

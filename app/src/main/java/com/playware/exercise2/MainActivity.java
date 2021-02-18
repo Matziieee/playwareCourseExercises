@@ -33,27 +33,21 @@ public class MainActivity extends AppCompatActivity implements OnAntEventListene
         pairingButton = findViewById(R.id.pairingButton);
         startGameButton = findViewById(R.id.startGameButton);
 
-        startGameButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                connection.unregisterListener(MainActivity.this);
-                Intent i = new Intent(MainActivity.this, ColourRaceActivity.class);
-                startActivity(i);
-            }
+        startGameButton.setOnClickListener(v -> {
+            connection.unregisterListener(MainActivity.this);
+            Intent i = new Intent(MainActivity.this, ColourRaceActivity.class);
+            startActivity(i);
         });
 
-        pairingButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                if(!isPairing){
-                    connection.pairTilesStart();
-                    pairingButton.setText("Stop pairing!");
-                }else{
-                    connection.pairTilesStop();
-                    pairingButton.setText("Start pairing!");
-                }
-                isPairing = !isPairing;
+        pairingButton.setOnClickListener(view -> {
+            if(!isPairing){
+                connection.pairTilesStart();
+                pairingButton.setText("Stop pairing!");
+            }else{
+                connection.pairTilesStop();
+                pairingButton.setText("Start pairing!");
             }
+            isPairing = !isPairing;
         });
     }
 
@@ -69,12 +63,7 @@ public class MainActivity extends AppCompatActivity implements OnAntEventListene
 
     @Override
     public void onNumbersOfTilesConnected(final int i) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                statusTextView.setText(i +" connected tiles");
-            }
-        });
+        runOnUiThread(() -> statusTextView.setText(i +" connected tiles"));
     }
 
     @Override
