@@ -6,9 +6,10 @@
     android:layout_height="match_parent"
     tools:context=".SpecialOneActivity">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="206dp"
-        android:layout_height="170dp"
-        android:text="hello world" />
+    <LinearLayout
+        android:id="@+id/specialOneLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"></LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
