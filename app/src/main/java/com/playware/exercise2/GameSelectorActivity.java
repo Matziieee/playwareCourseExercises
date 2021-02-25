@@ -19,6 +19,7 @@ public class GameSelectorActivity extends AppCompatActivity {
     public GameSelectorActivity (){
         games.add(ColourRaceActivity.class);
         games.add(SpecialOneActivity.class);
+        games.add(FinalCountDownActivity.class);
     }
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
