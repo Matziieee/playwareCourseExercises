@@ -59,7 +59,6 @@ public class SpecialOneGame extends Game {
         colours.add(LED_COLOR_ORANGE);
         colours.add(LED_COLOR_GREEN);
         colours.add(LED_COLOR_RED);
-        colours.add(LED_COLOR_VIOLET);
         colours.add(LED_COLOR_INDIGO);
     }
 
@@ -82,6 +81,7 @@ public class SpecialOneGame extends Game {
         int id = AntData.getId(message);
         if(event == EVENT_PRESS && id == this.currentSpecialTile){
             this.score++;
+            motoSound.speak(""+this.score);
             progressGame();
         }
     }
@@ -89,6 +89,7 @@ public class SpecialOneGame extends Game {
     @Override
     public void onGameEnd() {
         super.onGameEnd();
+        motoSound.speak("Game ended, your score was: " + this.score);
         connection.setAllTilesIdle(LED_COLOR_OFF);
 
     }
