@@ -9,11 +9,13 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.livelife.motolibrary.MotoConnection;
+import com.livelife.motolibrary.MotoSound;
 import com.livelife.motolibrary.OnAntEventListener;
 
 public class MainActivity extends AppCompatActivity implements OnAntEventListener {
 
-    MotoConnection connection;
+    MotoConnection connection = MotoConnection.getInstance();
+    MotoSound sound;
     Button pairingButton, startGameButton;
     boolean isPairing;
     TextView statusTextView;
@@ -23,11 +25,12 @@ public class MainActivity extends AppCompatActivity implements OnAntEventListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        connection=MotoConnection.getInstance();
         connection.startMotoConnection(MainActivity.this);
         connection.saveRfFrequency(5*10+6);         //(Group No.)*10+6
         connection.setDeviceId(5);              //Your group number
         connection.registerListener(MainActivity.this);
+
+        sound.initializeSounds(this);
 
         statusTextView = findViewById(R.id.statusTextView);
         pairingButton = findViewById(R.id.pairingButton);

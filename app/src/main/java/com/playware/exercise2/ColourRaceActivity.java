@@ -33,7 +33,6 @@ public class ColourRaceActivity extends AppCompatActivity implements OnAntEventL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //motoSound.initializeSounds(this);
         setContentView(R.layout.activity_game);
         connection.registerListener(this);
         connection.setAllTilesToInit();
