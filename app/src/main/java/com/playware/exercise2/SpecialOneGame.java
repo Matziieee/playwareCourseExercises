@@ -89,5 +89,7 @@ public class SpecialOneGame extends Game {
     @Override
     public void onGameEnd() {
         super.onGameEnd();
+        connection.setAllTilesIdle(LED_COLOR_OFF);
+
     }
 }
