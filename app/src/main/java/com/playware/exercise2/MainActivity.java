@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements OnAntEventListene
 
         startGameButton.setOnClickListener(v -> {
             connection.unregisterListener(MainActivity.this);
-            Intent i = new Intent(MainActivity.this, ColourRaceActivity.class);
+            Intent i = new Intent(MainActivity.this, GameSelectorActivity.class);
             startActivity(i);
         });
 
