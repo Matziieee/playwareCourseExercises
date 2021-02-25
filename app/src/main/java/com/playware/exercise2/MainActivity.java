@@ -15,7 +15,7 @@ import com.livelife.motolibrary.OnAntEventListener;
 public class MainActivity extends AppCompatActivity implements OnAntEventListener {
 
     MotoConnection connection = MotoConnection.getInstance();
-    MotoSound sound;
+    MotoSound sound = MotoSound.getInstance();
     Button pairingButton, startGameButton;
     boolean isPairing;
     TextView statusTextView;
