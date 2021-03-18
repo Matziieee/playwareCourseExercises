@@ -16,18 +16,18 @@ import com.livelife.motolibrary.OnAntEventListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class AdaptiveGameActivity extends AppCompatActivity implements OnAntEventListener {
+public class AdaptiveGame2Activity extends AppCompatActivity implements OnAntEventListener {
 
     MotoConnection connection = MotoConnection.getInstance();
     MotoSound motoSound = MotoSound.getInstance();
     LinearLayout gameTypeContainer;
-    AdaptiveGame AdaptiveGameManager;
+    AdaptiveGame2 AdaptiveGame2Manager;
 
     //Stop the game when we exit activity
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        AdaptiveGameManager.stopGame();
+        AdaptiveGame2Manager.stopGame();
     }
 
     @Override
@@ -37,16 +37,16 @@ public class AdaptiveGameActivity extends AppCompatActivity implements OnAntEven
         connection.registerListener(this);
         connection.setAllTilesToInit();
 
-        AdaptiveGameManager = new AdaptiveGame();
+        AdaptiveGame2Manager = new AdaptiveGame2();
         gameTypeContainer = findViewById(R.id.gameTypeContainer);
 
-        for (final GameType gt : AdaptiveGameManager.getGameTypes()) {
+        for (final GameType gt : AdaptiveGame2Manager.getGameTypes()) {
             Button b = new Button(this);
             b.setText(gt.getName());
             b.setOnClickListener(v -> {
                 motoSound.playStart();
-                AdaptiveGameManager.selectedGameType = gt;
-                AdaptiveGameManager.startGame();
+                AdaptiveGame2Manager.selectedGameType = gt;
+                AdaptiveGame2Manager.startGame();
             });
             gameTypeContainer.addView(b);
         }
@@ -54,7 +54,7 @@ public class AdaptiveGameActivity extends AppCompatActivity implements OnAntEven
 
     @Override
     public void onMessageReceived(byte[] bytes, long l) {
-        AdaptiveGameManager.addEvent(bytes);
+        AdaptiveGame2Manager.addEvent(bytes);
     }
 
     @Override

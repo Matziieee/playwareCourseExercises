@@ -16,3 +16,4 @@ local.properties
 
 # Project exclude paths
 /moto_library-release/build/
+/.idea/.name
