@@ -10,6 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Exercise2">
         <activity android:name=".AdaptiveGameActivity"></activity>
+        <activity android:name=".AdaptiveGame2Activity" />
         <activity android:name=".FinalCountDownActivity" />
         <activity android:name=".GameSelectorActivity" />
         <activity android:name=".SpecialOneActivity" />
