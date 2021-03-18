@@ -22,6 +22,7 @@ public class GameSelectorActivity extends AppCompatActivity {
         games.add(FinalCountDownActivity.class);
         games.add(AdaptiveGameActivity.class);
         games.add(AdaptiveGame2Activity.class);
+        games.add(HitTargetActivity.class);
     }
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
