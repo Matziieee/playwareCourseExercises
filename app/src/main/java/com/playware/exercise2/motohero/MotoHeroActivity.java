@@ -1,13 +1,13 @@
-package com.playware.exercise2.beergame;
+package com.playware.exercise2.motohero;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import com.livelife.motolibrary.Game;
+
 import com.playware.exercise2.R;
 
 
-public class BeerGameActivity extends AppCompatActivity {
-    BeerGameView gameView;
+public class MotoHeroActivity extends AppCompatActivity {
+    MotoHeroView gameView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

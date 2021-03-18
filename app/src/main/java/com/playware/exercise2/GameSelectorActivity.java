@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
-import com.playware.exercise2.beergame.BeerGameActivity;
+import com.playware.exercise2.motohero.MotoHeroActivity;
 
 import java.util.ArrayList;
 
@@ -21,7 +21,7 @@ public class GameSelectorActivity extends AppCompatActivity {
     public GameSelectorActivity (){
         games.add(ColourRaceActivity.class);
         games.add(SpecialOneActivity.class);
-        games.add(BeerGameActivity.class);
+        games.add(MotoHeroActivity.class);
     }
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override

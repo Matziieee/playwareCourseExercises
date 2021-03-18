@@ -1,4 +1,4 @@
-package com.playware.exercise2.beergame;
+package com.playware.exercise2.motohero;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -7,9 +7,9 @@ import android.util.AttributeSet;
 
 import com.playware.exercise2.shared.GameView;
 
-public class BeerGameView extends GameView {
+public class MotoHeroView extends GameView {
 
-    public BeerGameView(Context context, AttributeSet as) {
+    public MotoHeroView(Context context, AttributeSet as) {
         super(context, as);
     }
 

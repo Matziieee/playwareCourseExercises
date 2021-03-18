@@ -6,9 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#03fc7b"
-    tools:context=".beergame.BeerGameActivity">
+    tools:context=".motohero.MotoHeroActivity">
 
-    <com.playware.exercise2.beergame.BeerGameView
+    <com.playware.exercise2.motohero.MotoHeroView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/beerGameView"/>

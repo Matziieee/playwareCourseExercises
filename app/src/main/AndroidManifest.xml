@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Exercise2">
-        <activity android:name=".beergame.BeerGameActivity"></activity>
+        <activity android:name=".motohero.MotoHeroActivity"></activity>
         <activity android:name=".GameSelectorActivity" />
         <activity android:name=".SpecialOneActivity" />
         <activity android:name=".ColourRaceActivity" />
