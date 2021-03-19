@@ -14,8 +14,8 @@ public abstract class GameView extends SurfaceView implements Runnable {
     private Thread gameThread;
     private final static int MAX_FPS = 30;
     private final static int FRAME_PERIOD = 1000 / MAX_FPS;
-    private int screenHeight;
-    private int screenWidth;
+    protected int screenHeight;
+    protected int screenWidth;
 
     public GameView(Context context, AttributeSet as){
         super(context,as);

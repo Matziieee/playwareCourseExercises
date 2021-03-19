@@ -8,9 +8,11 @@ import android.util.AttributeSet;
 import com.playware.exercise2.shared.GameView;
 
 public class MotoHeroView extends GameView {
+    MotoHero motoHero;
 
     public MotoHeroView(Context context, AttributeSet as) {
         super(context, as);
+        motoHero = new MotoHero(screenWidth, screenHeight);
     }
 
     @Override
@@ -20,10 +22,6 @@ public class MotoHeroView extends GameView {
 
     @Override
     protected void render(Canvas canvas) {
-        canvas.drawColor(Color.RED);
-    }
-
-    private void renderLanes(Canvas canvas){
-
+        motoHero.render(canvas);
     }
 }
