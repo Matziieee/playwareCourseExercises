@@ -23,6 +23,7 @@ public class GameSelectorActivity extends AppCompatActivity {
         games.add(AdaptiveGameActivity.class);
         games.add(AdaptiveGame2Activity.class);
         games.add(HitTargetActivity.class);
+        games.add(PrettyListActivity.class);
     }
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override

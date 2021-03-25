@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements OnAntEventListene
         connection.setDeviceId(5);              //Your group number
         connection.registerListener(MainActivity.this);
 
-        sound.initializeSounds(this);
+        //sound.initializeSounds(this);
 
         statusTextView = findViewById(R.id.statusTextView);
         pairingButton = findViewById(R.id.pairingButton);
