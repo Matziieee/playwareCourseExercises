@@ -77,40 +77,5 @@ public class GameSessionManager {
         protected String doInBackground(RemoteHttpRequest... params) {
             return HttpManager.getData(params[0]);
         }
-
-        //The String that is returned in the doInBackground() method is sent to the
-        // onPostExecute() method below. The String should contain JSON data.
-        @Override
-        protected void onPostExecute(String result) {
-            /*try {
-                //We need to convert the string in result to a JSONObject
-                JSONObject jsonObject = new JSONObject(result);
-                resultObj = jsonObject;
-                String message = jsonObject.getString("message");
-
-
-                if(jsonObject.getString("method") == "getGameSessions") {
-
-                    JSONArray sessions = jsonObject.getJSONArray("results");
-                    for(int i = 0; i < sessions.length();i++) {
-                        JSONObject session = sessions.getJSONObject(i);
-                        Log.i("sessions",session.toString());
-                        // get score example:
-                        // String score = session.getString("game_score");
-                    }
-
-                }
-                else if(jsonObject.getString("method") == "postGameSession") {
-
-                    Log.i("sessions",message);
-
-                    // Update UI
-                }
-
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }*/
-        }
     }
 }

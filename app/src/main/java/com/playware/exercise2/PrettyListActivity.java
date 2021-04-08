@@ -23,7 +23,6 @@ public class PrettyListActivity extends AppCompatActivity {
     Button getSessionsBtn, postSessionBtn;
     GameSessionManager manager;
     int inc1 = 0;
-    int inc2 = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
