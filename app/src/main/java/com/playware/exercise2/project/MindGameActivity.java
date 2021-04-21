@@ -1,8 +1,10 @@
 package com.playware.exercise2.project;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -20,11 +22,12 @@ import java.util.HashMap;
 public class MindGameActivity extends AppCompatActivity implements OnAntEventListener {
 
     TextView levelText,scoreText;
-    HashMap<Integer, ColorView> tileColorViewMap = new HashMap<>();
-    ArrayList<ColorView> colorViews = new ArrayList<>();
-    ArrayAdapter<ColorView> gridAdapter;
+    HashMap<Integer, ColorBox> tileColorViewMap = new HashMap<>();
+    ArrayList<ColorBox> colorViews = new ArrayList<>();
+    ColorViewAdapter gridAdapter;
     GridView gridView;
     MindGame game;
+
 
     Handler targetHandler = new Handler();
     long updateSpeed = 100;
@@ -36,6 +39,7 @@ public class MindGameActivity extends AppCompatActivity implements OnAntEventLis
         }
     };
 
+    @RequiresApi(api = Build.VERSION_CODES.P)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,23 +49,30 @@ public class MindGameActivity extends AppCompatActivity implements OnAntEventLis
         scoreText = findViewById(R.id.mindScoreText);
         initGrid();
         game = new MindGame();
+        game.setSelectedGameType(0);
+        game.startGame();
+        targetHandler.postDelayed(uiHandler,updateSpeed);
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.P)
     private void initGrid(){
         //init hashMap and list
         for(int i = 0; i < 4; i++){
-            ColorView cv = new ColorView(this,null);
+            ColorBox cv = new ColorBox();
             tileColorViewMap.put(i,cv);
             colorViews.add(cv);
         }
         //grid adapter and grid
-        gridAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, colorViews);
+        gridAdapter = new ColorViewAdapter(this, android.R.layout.simple_list_item_1,colorViews);
         gridView = findViewById(R.id.gridView);
         gridView.setAdapter(gridAdapter);
         gridView.setOnItemClickListener((parent, view, position, id) -> {
-            //todo code for manual click here until we have tile.
+            if(game.isGameStarted){
+                game.handlePress(position);
+            }
         });
+        gridAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -82,13 +93,44 @@ public class MindGameActivity extends AppCompatActivity implements OnAntEventLis
 
     private void updateUI(){
         runOnUiThread(() -> {
-            levelText.setText("Level: " + game.currentLevel.size);
+
+            if(game.shouldClear){
+                for(ColorBox b : tileColorViewMap.values()){
+                    b.setCurrentColor(Color.TRANSPARENT);
+                }
+                game.shouldClear = false;
+            }
+
+            // LEVEL TEXT
+            if(game.currentLevel != null){
+                levelText.setText("Level: " + game.currentLevel.size);
+            }
+
+            // SCORE TEXT
             scoreText.setText("Score: " + game.getPlayerScore()[0]);
-            if(game.currentTileClick != null){
-                tileColorViewMap.get(game.currentTileClick.tile)
-                        .setCurrentColor(translateColor(game.currentTileClick.color));
+
+            // VISUALIZE SHOW PHASE
+            if (game.currentTileShown != null) {
+                for(TileClick tc : game.currentLevel.tileClicks){
+                    if(tc.tile != game.currentTileShown.tile){
+                        tileColorViewMap.get(tc.tile)
+                                .setCurrentColor(Color.TRANSPARENT);
+                        continue;
+                    }
+                    tileColorViewMap.get(tc.tile)
+                            .setCurrentColor(translateColor(game.currentTileShown.color));
+                }
+            }
+
+            // VISUALIZE PLAY PHASE
+            if(game.isGameStarted) {
+                for(ColorBox b : tileColorViewMap.values()){
+                    b.setCurrentColor(Color.YELLOW);
+                }
             }
         });
+
+        gridAdapter.notifyDataSetChanged();
     }
 
     private int translateColor(int motoColor){

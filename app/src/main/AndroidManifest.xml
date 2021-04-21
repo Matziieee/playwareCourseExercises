@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Exercise2">
-        <activity android:name=".project.MindGameActivity"></activity>
+        <activity android:name=".project.MindGameSelectorActivity"></activity>
+        <activity android:name=".project.MindGameActivity" />
         <activity android:name=".ChallengeActivity" />
         <activity android:name=".PrettyListActivity" />
         <activity android:name=".HitTargetActivity" />
