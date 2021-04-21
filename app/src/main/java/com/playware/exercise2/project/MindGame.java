@@ -24,7 +24,7 @@ import static com.livelife.motolibrary.AntData.LED_COLOR_OFF;
 public class MindGame extends Game {
 
     protected long BASE_TIME_VISIBLE_MS = 1500; // Each tile is visible for 3 seconds
-    protected long BASE_TIME_TO_CLICK_MS = 2000; //User has 100 seconds to click each tile, effectively making it not matter. Intended for this game mode.
+    protected long BASE_TIME_TO_CLICK_MS = 200000; //User has 100 seconds to click each tile, effectively making it not matter. Intended for this game mode.
     /*
     Uncomment when using tiles
     MotoConnection motoConnection = MotoConnection.getInstance();
@@ -142,7 +142,6 @@ public class MindGame extends Game {
                     @Override
                     public void run() {
                         //if this runs, user has failed.
-                        System.out.println("\n\ntime ran out\n\n");
                         endGame();
                         return;
                     }
@@ -162,7 +161,6 @@ public class MindGame extends Game {
 
                 //increment score and expect next input
                 game.incrementPlayerScore(1, 0);
-                System.out.println("you did it - score is " + game.getPlayerScore()[0]);
 
                 //if correct press was last in level
                 if(currentLevel.tileClicks.indexOf(currentTileClick) == currentLevel.tileClicks.size()-1){
