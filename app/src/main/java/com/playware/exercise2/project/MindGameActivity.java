@@ -54,6 +54,7 @@ public class MindGameActivity extends AppCompatActivity implements OnAntEventLis
         scoreText = findViewById(R.id.mindScoreText);
         startGame = findViewById(R.id.startGameBtn);
 
+        startGame.setBackgroundColor(Color.BLUE);
 
         initGrid();
         connection.registerListener(this);
@@ -111,16 +112,6 @@ public class MindGameActivity extends AppCompatActivity implements OnAntEventLis
 
             if (game.startGame){
                 startGame.setEnabled(true);
-            }
-
-            if(game.isGameOver && !hasShownGameOverPrompt){
-                new AlertDialog.Builder(this.getApplicationContext())
-                        .setTitle("Do you want to ??sa")
-                        .setMessage("your score was: ")
-                        // A null listener allows the button to dismiss the dialog and take no further action.
-                        .setNegativeButton(android.R.string.no, null)
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
             }
 
             if(game.shouldClear){
