@@ -1,7 +1,7 @@
 package com.playware.exercise2.maxhttp;
 
 public class GameSessionPostRequest {
-    private String groupId;
+    private String groupId = "5001";
     private String gameId;
     private String gameTypeId;
     private String gameScore;
@@ -10,6 +10,14 @@ public class GameSessionPostRequest {
 
     public GameSessionPostRequest(String groupId, String gameId, String gameTypeId, String gameScore, String gameTime, String numTiles) {
         this.groupId = groupId;
+        this.gameId = gameId;
+        this.gameTypeId = gameTypeId;
+        this.gameScore = gameScore;
+        this.gameTime = gameTime;
+        this.numTiles = numTiles;
+    }
+
+    public GameSessionPostRequest(String gameId, String gameTypeId, String gameScore, String gameTime, String numTiles) {
         this.gameId = gameId;
         this.gameTypeId = gameTypeId;
         this.gameScore = gameScore;

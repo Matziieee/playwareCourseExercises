@@ -14,10 +14,12 @@ import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Button;
 
+import com.livelife.motolibrary.Game;
 import com.livelife.motolibrary.MotoConnection;
 import com.livelife.motolibrary.MotoSound;
 import com.livelife.motolibrary.OnAntEventListener;
 import com.playware.exercise2.R;
+import com.playware.exercise2.maxhttp.GameChallenge;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,6 +34,7 @@ public class MindGameActivity extends AppCompatActivity implements OnAntEventLis
     GridView gridView;
     MindGame game;
     boolean isChallenge = false;
+    GameChallenge challenge;
 
     MotoConnection connection = MotoConnection.getInstance();
     MotoSound sound = MotoSound.getInstance();
@@ -46,7 +49,17 @@ public class MindGameActivity extends AppCompatActivity implements OnAntEventLis
             targetHandler.postDelayed(this,updateSpeed);
         }
     };
-    private boolean hasShownGameOverPrompt = false;
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if(isChallenge){
+            Intent resultIntent = new Intent();
+            resultIntent.putExtra("score", -1);
+            setResult(Activity.RESULT_CANCELED, resultIntent);
+            finish();
+        }
+    }
 
     @Override
     protected void onDestroy() {
@@ -71,7 +84,14 @@ public class MindGameActivity extends AppCompatActivity implements OnAntEventLis
         Bundle b = getIntent().getExtras();
         if(b!= null){
             isChallenge = true;
+            challenge = (GameChallenge) b.get("challenge");
         }
+
+        startGame.setOnClickListener((v) -> {
+            startGame.setEnabled(false);
+            game.startGame = false;
+            game.advanceGame();
+        });
 
         game = new MindGame();
         game.setSelectedGameType(0);
@@ -116,25 +136,8 @@ public class MindGameActivity extends AppCompatActivity implements OnAntEventLis
 
     private void updateUI(){
         runOnUiThread(() -> {
-
-            startGame.setOnClickListener((v) -> {
-                startGame.setEnabled(false);
-                game.startGame = false;
-                game.advanceGame();
-            });
-
             if (game.startGame){
                 startGame.setEnabled(true);
-            }
-
-            if(game.isGameOver && !hasShownGameOverPrompt){
-                new AlertDialog.Builder(this.getApplicationContext())
-                        .setTitle("Do you want to ??sa")
-                        .setMessage("your score was: ")
-                        // A null listener allows the button to dismiss the dialog and take no further action.
-                        .setNegativeButton(android.R.string.no, null)
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
             }
 
             if(game.shouldClear){
@@ -172,9 +175,10 @@ public class MindGameActivity extends AppCompatActivity implements OnAntEventLis
                 }
             }
         });
-        if(isChallenge && false){
+        if(isChallenge && game.isGameOver){
             Intent resultIntent = new Intent();
             resultIntent.putExtra("score", game.getPlayerScore()[0]);
+            resultIntent.putExtra("challenge", challenge);
             setResult(Activity.RESULT_OK, resultIntent);
             finish();
         }

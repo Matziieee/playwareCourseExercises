@@ -4,9 +4,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.session.MediaSession;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -18,7 +20,12 @@ import com.playware.exercise2.R;
 import com.playware.exercise2.maxhttp.ChallengeStatus;
 import com.playware.exercise2.maxhttp.GameChallenge;
 import com.playware.exercise2.maxhttp.GameChallengeManager;
+import com.playware.exercise2.maxhttp.GameSessionManager;
+import com.playware.exercise2.maxhttp.GameSessionPostRequest;
 import com.playware.exercise2.maxhttp.TokenManager;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,6 +34,7 @@ import java.util.HashMap;
 public class ActiveChallengesActivity extends AppCompatActivity {
 
     GameChallengeManager challengeManager;
+    GameSessionManager sessionManager;
     SharedPreferences sharedPreferences;
     Button updateChallengesBtn, getMyChallengesBtn;
     TextView listTitle;
@@ -63,6 +71,7 @@ public class ActiveChallengesActivity extends AppCompatActivity {
         myChallengesListView.setAdapter(myChallengesAdapter);
 
         challengeManager = new GameChallengeManager();
+        sessionManager = new GameSessionManager();
 
         updateChallengesBtn.setOnClickListener(v -> {
             flipVisibleLists(true);
@@ -85,22 +94,7 @@ public class ActiveChallengesActivity extends AppCompatActivity {
         });
 
         getMyChallengesBtn.setOnClickListener(v -> {
-            flipVisibleLists(false);
-            listTitle.setText("Showing all your active challenges");
-            myChallengesMap.clear();
-            items.clear();
-            serializedMyChallenges.clear();
-            ArrayList<GameChallenge> toAdd =  challengeManager.getGameChallenges(TokenManager.getDeviceToken(sharedPreferences));
-            if(toAdd != null){
-                for (int i = 0; i < toAdd.size(); i++) {
-                    if (isMyChallenge(toAdd.get(i))) {
-                        items.add(toAdd.get(i));
-                        challengesMap.put(i, toAdd.get(i));
-                    }
-                }
-                serializedMyChallenges.addAll(this.getChallengesAsStrings());
-                myChallengesAdapter.notifyDataSetChanged();
-            }
+            updateMyChallenges();
         });
 
         allChallengesListView.setOnItemClickListener((parent, view, position, id) -> {
@@ -142,11 +136,31 @@ public class ActiveChallengesActivity extends AppCompatActivity {
         });
     }
 
+    private void postGameSessionResult(GameChallenge gc, int score, String token){
+        GameSessionPostRequest req = new GameSessionPostRequest(""+gc.getGameId(), ""+gc.getGameTypeId(), ""+score, "-1", "4");
+        if(sessionManager.postGameSession(req,token)){
+            new AlertDialog.Builder(this.getApplicationContext())
+                    .setTitle("Successfully submitted result!")
+                    // A null listener allows the button to dismiss the dialog and take no further action.
+                    .setNegativeButton(android.R.string.no, null)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+        }else{
+            new AlertDialog.Builder(this.getApplicationContext())
+                    .setTitle("Failed to submit result, try again!")
+                    // A null listener allows the button to dismiss the dialog and take no further action.
+                    .setNegativeButton(android.R.string.no, null)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 1111){
+        if(requestCode == 1111 && resultCode == Activity.RESULT_OK){
             int score = data == null ? -1 : data.getIntExtra("score",-1);
+            postGameSessionResult((GameChallenge) data.getExtras().get("challenge"), score, TokenManager.getDeviceToken(sharedPreferences));
         }
     }
 
@@ -176,5 +190,55 @@ public class ActiveChallengesActivity extends AppCompatActivity {
         return list;
     }
 
-    private void startGameFromChallenge(int challNum){}
+    private ArrayList<String> getMyChallengesAsStrings(){
+        ArrayList<String> list = new ArrayList<>();
+        for (GameChallenge c : this.items){
+            list.add(c.toString() + getHighScores(c));
+        }
+        return list;
+    }
+
+    private String getHighScores(GameChallenge gc) {
+        String me = TokenManager.getDeviceToken(sharedPreferences);
+        String other = gc.getDeviceToken().equals(me) ? gc.getDeviceToken_c() : gc.getDeviceToken();
+        int myScore = 0;
+        int opponentScore = 0;
+        //Find highest scores
+        try {
+            for (int i = 0; i < gc.getSummaryObject().length(); i++) {
+                JSONObject obj = gc.getSummaryObject().getJSONObject(i);
+                String token = obj.getString("device_token");
+                int score = Integer.parseInt(obj.getString("game_score"));
+                if (token.equals(me) && score > myScore) {
+                    myScore = score;
+                }
+                else if (token.equals(other) && score > opponentScore) {
+                    opponentScore = score;
+                }
+            }
+            return "My best score: " + myScore + "\n" +
+                    "Opponents best score: " + opponentScore;
+        }catch (Exception e) {
+            return "";
+        }
+
+    }
+    private void updateMyChallenges(){
+        flipVisibleLists(false);
+        listTitle.setText("Showing all your active challenges");
+        myChallengesMap.clear();
+        items.clear();
+        serializedMyChallenges.clear();
+        ArrayList<GameChallenge> toAdd =  challengeManager.getGameChallenges(TokenManager.getDeviceToken(sharedPreferences));
+        if(toAdd != null){
+            for (int i = 0; i < toAdd.size(); i++) {
+                if (isMyChallenge(toAdd.get(i))) {
+                    items.add(toAdd.get(i));
+                    challengesMap.put(i, toAdd.get(i));
+                }
+            }
+            serializedMyChallenges.addAll(this.getMyChallengesAsStrings());
+            myChallengesAdapter.notifyDataSetChanged();
+        }
+    }
 }
