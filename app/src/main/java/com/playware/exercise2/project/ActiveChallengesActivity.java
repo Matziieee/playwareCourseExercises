@@ -128,7 +128,9 @@ public class ActiveChallengesActivity extends AppCompatActivity {
                     .setPositiveButton("Start Game", (dialog, which) -> {
                         //Start
                         Intent i = new Intent(this, MindGameActivity.class);
-                        i.putExtra("challenge", myChallengesMap.get(position));
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("challenge", myChallengesMap.get(position));
+                        i.putExtras(bundle);
                         startActivityForResult(i, 1111);
                     })
                     .setNegativeButton("Cancel", (dialog, which) -> dialog.cancel())
@@ -137,20 +139,18 @@ public class ActiveChallengesActivity extends AppCompatActivity {
     }
 
     private void postGameSessionResult(GameChallenge gc, int score, String token){
-        GameSessionPostRequest req = new GameSessionPostRequest(""+gc.getGameId(), ""+gc.getGameTypeId(), ""+score, "-1", "4");
+        GameSessionPostRequest req = new GameSessionPostRequest(""+gc.getGameId(), ""+gc.getGameTypeId(), ""+score, "-1", "4",gc.getGcid());
         if(sessionManager.postGameSession(req,token)){
-            new AlertDialog.Builder(this.getApplicationContext())
+            new AlertDialog.Builder(this)
                     .setTitle("Successfully submitted result!")
                     // A null listener allows the button to dismiss the dialog and take no further action.
                     .setNegativeButton(android.R.string.no, null)
-                    .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
         }else{
-            new AlertDialog.Builder(this.getApplicationContext())
+            new AlertDialog.Builder(this)
                     .setTitle("Failed to submit result, try again!")
                     // A null listener allows the button to dismiss the dialog and take no further action.
                     .setNegativeButton(android.R.string.no, null)
-                    .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
         }
     }
@@ -234,7 +234,7 @@ public class ActiveChallengesActivity extends AppCompatActivity {
             for (int i = 0; i < toAdd.size(); i++) {
                 if (isMyChallenge(toAdd.get(i))) {
                     items.add(toAdd.get(i));
-                    challengesMap.put(i, toAdd.get(i));
+                    myChallengesMap.put(i, toAdd.get(i));
                 }
             }
             serializedMyChallenges.addAll(this.getMyChallengesAsStrings());

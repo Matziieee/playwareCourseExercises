@@ -21,6 +21,7 @@ public class GameSessionManager {
         requestPackage.setParam("method","postGameSession"); // The method name
         requestPackage.setParam("device_token", token);
         requestPackage.setParam("group_id",request.getGroupId()); // Your group ID
+        requestPackage.setParam("gcid", request.getGcid());
         requestPackage.setParam("game_id",request.getGameId()); // The game ID (From the Game class > setGameId() function
         requestPackage.setParam("game_type_id",request.getGameTypeId()); // The game type ID (From the GameType class creation > first parameter)
         requestPackage.setParam("game_score",request.getGameScore()); // The game score

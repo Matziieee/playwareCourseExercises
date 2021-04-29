@@ -68,7 +68,7 @@ public class MindGame extends Game {
     @Override
     public void onGameUpdate(byte[] message) {
         super.onGameUpdate(message);
-        if(!isGameStarted) return;
+        if(!isGameStarted || startGame) return;
         int id = AntData.getId(message);
         int event = AntData.getCommand(message);
         if(event == EVENT_PRESS){
@@ -141,7 +141,7 @@ public class MindGame extends Game {
             @Override
             public void run() {
                 //If level is still being shown to user, do nothing.
-                if(!isGameStarted){
+                if(!isGameStarted || startGame){
                     handler.postDelayed(this, 100);
                     return;
                 }
