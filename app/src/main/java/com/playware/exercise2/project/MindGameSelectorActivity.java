@@ -10,12 +10,14 @@ import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
+import com.livelife.motolibrary.MotoConnection;
+import com.livelife.motolibrary.OnAntEventListener;
 import com.playware.exercise2.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class MindGameSelectorActivity extends AppCompatActivity {
+public class MindGameSelectorActivity extends AppCompatActivity{
     HashMap<String, Class> games = new HashMap<>();
     TableLayout layout;
 

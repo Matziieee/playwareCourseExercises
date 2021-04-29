@@ -26,12 +26,12 @@ public class MainActivity extends AppCompatActivity implements OnAntEventListene
         setContentView(R.layout.activity_main);
 
         connection.startMotoConnection(MainActivity.this);
-        connection.saveRfFrequency(5*10+6);         //(Group No.)*10+6
-        connection.setDeviceId(5);              //Your group number
+        connection.saveRfFrequency(4*10+6);         //(Group No.)*10+6
+        connection.setDeviceId(4);              //Your group number
         connection.registerListener(MainActivity.this);
 
         //todo UNCOMMENT THIS
-        //sound.initializeSounds(this);
+        sound.initializeSounds(this);
 
         statusTextView = findViewById(R.id.statusTextView);
         pairingButton = findViewById(R.id.pairingButton);
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements OnAntEventListene
 
     @Override
     public void onMessageReceived(byte[] bytes, long l) {
-
+        System.out.println("Hello world");
     }
 
     @Override

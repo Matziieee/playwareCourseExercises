@@ -1,10 +1,7 @@
 package com.playware.exercise2.project;
 
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Handler;
-
-import androidx.annotation.RequiresApi;
 
 import com.livelife.motolibrary.AntData;
 import com.livelife.motolibrary.Game;
@@ -14,21 +11,23 @@ import com.livelife.motolibrary.MotoSound;
 
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.UUID;
+
 
 import static com.livelife.motolibrary.AntData.CMD_COUNTDOWN_TIMEUP;
 import static com.livelife.motolibrary.AntData.EVENT_PRESS;
+import static com.livelife.motolibrary.AntData.LED_COLOR_BLUE;
 import static com.livelife.motolibrary.AntData.LED_COLOR_GREEN;
 import static com.livelife.motolibrary.AntData.LED_COLOR_OFF;
+import static com.livelife.motolibrary.AntData.LED_COLOR_RED;
 
 public class MindGame extends Game {
 
-    protected long BASE_TIME_VISIBLE_MS = 1500; // Each tile is visible for 3 seconds
+    protected long BASE_TIME_VISIBLE_MS = 3000; // Each tile is visible for 3 seconds
     protected long BASE_TIME_TO_CLICK_MS = 200000; //User has 100 seconds to click each tile, effectively making it not matter. Intended for this game mode.
     /*
-    Uncomment when using tiles
+    Uncomment when using tiles*/
     MotoConnection motoConnection = MotoConnection.getInstance();
-    MotoSound sound = MotoSound.getInstance(); */
+    MotoSound sound = MotoSound.getInstance(); /**/
 
     ArrayList<Level> levels;
     Level currentLevel;
@@ -54,14 +53,12 @@ public class MindGame extends Game {
         levels = new ArrayList<>();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.P)
     @Override
     public void onGameStart() {
         super.onGameStart();
         advanceGame();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.P)
     @Override
     public void onGameUpdate(byte[] message) {
         super.onGameUpdate(message);
@@ -81,7 +78,6 @@ public class MindGame extends Game {
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.P)
     public void handlePress(int tile){
         if(tile == currentTileClick.tile){
             this.isCorrectPressed =  true;
@@ -106,10 +102,13 @@ public class MindGame extends Game {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
+                motoConnection.setAllTilesIdle(0);
                 if(level.currentClickNum == level.size){
                     currentTileShown.color = 0;
                     currentTileShown = null;
                     isGameStarted = true;
+                    motoConnection.setAllTilesColor(LED_COLOR_GREEN);
+                    sound.playStart();
                     currentTileClick = currentLevel.tileClicks.get(0);
                     return;
                 }
@@ -117,36 +116,26 @@ public class MindGame extends Game {
                     currentTileShown.color = 0;
                 }
                 currentTileShown = level.tileClicks.get(level.currentClickNum);
+                motoConnection.setTileColor(currentTileShown.color, currentTileShown.tile);
                 level.currentClickNum++;
                 handler.postDelayed(this, currentTileShown.timeVisibleMs);
             }
         }, 0);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.P)
     protected void playLevel(Level currentLevel, MindGame game){
 
         // Game loop runnable
         handler.postDelayed(new Runnable() {
-            @RequiresApi(api = Build.VERSION_CODES.P)
             @Override
             public void run() {
                 //If level is still being shown to user, do nothing.
                 if(!isGameStarted){
-                    handler.postDelayed(this, 1000);
+                    handler.postDelayed(this, 100);
                     return;
                 }
                 //Start new runnable that asserts user presses within time limit
-                UUID token = UUID.randomUUID();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        //if this runs, user has failed.
-                        endGame();
-                        return;
-                    }
-                }, token, currentTileClick.timeToPressMs);
-
+                //handler.postDelayed(withinTimeRunnable, currentTileClick.timeToPressMs);
 
                 //wait for user to press...
                 if(!hasPressed && !isCorrectPressed){
@@ -154,8 +143,8 @@ public class MindGame extends Game {
                     return;
                 }
 
-
-                handler.removeCallbacksAndMessages(token);
+                sound.playMatched();
+                handler.removeCallbacks(withinTimeRunnable);
                 hasPressed = false;
                 isCorrectPressed = false;
 
@@ -180,7 +169,7 @@ public class MindGame extends Game {
     }
 
     protected int getNextTile(){
-        return rand.nextInt(4);
+        return rand.nextInt(4)+1;
     }
 
     protected int getNextColor(){
@@ -202,8 +191,8 @@ public class MindGame extends Game {
         return newColor;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.P)
     protected void advanceGame(){
+        sound.speak("NEXT LEVEL");
         this.shouldClear = true;
         handler.removeCallbacksAndMessages(null);
         this.isGameStarted = false;
@@ -212,11 +201,21 @@ public class MindGame extends Game {
         playLevel(this.currentLevel,this);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.P)
     private void endGame(){
         System.out.println("GAME ENDED");
+        sound.speak("Game over");
         handler.removeCallbacksAndMessages(null);
         this.stopGame();
+        motoConnection.setAllTilesIdle(LED_COLOR_RED);
         currentLevel.tileClicks.forEach((tc) -> tc.color = 0);
     }
+
+    Runnable withinTimeRunnable = new Runnable() {
+        @Override
+        public void run() {
+            //if this runs, user has failed.
+            endGame();
+        }
+    };
+
 }

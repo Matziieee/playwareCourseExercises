@@ -1,18 +1,16 @@
 package com.playware.exercise2.project;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.TextView;
 
+import com.livelife.motolibrary.MotoConnection;
+import com.livelife.motolibrary.MotoSound;
 import com.livelife.motolibrary.OnAntEventListener;
 import com.playware.exercise2.R;
 
@@ -28,6 +26,9 @@ public class MindGameActivity extends AppCompatActivity implements OnAntEventLis
     GridView gridView;
     MindGame game;
 
+    MotoConnection connection = MotoConnection.getInstance();
+    MotoSound sound = MotoSound.getInstance();
+
 
     Handler targetHandler = new Handler();
     long updateSpeed = 100;
@@ -39,7 +40,6 @@ public class MindGameActivity extends AppCompatActivity implements OnAntEventLis
         }
     };
 
-    @RequiresApi(api = Build.VERSION_CODES.P)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +48,9 @@ public class MindGameActivity extends AppCompatActivity implements OnAntEventLis
         levelText = findViewById(R.id.mindLevelText);
         scoreText = findViewById(R.id.mindScoreText);
         initGrid();
+        connection.registerListener(this);
+        connection.setAllTilesToInit();
+
         game = new MindGame();
         game.setSelectedGameType(0);
         game.startGame();
@@ -55,10 +58,9 @@ public class MindGameActivity extends AppCompatActivity implements OnAntEventLis
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.P)
     private void initGrid(){
         //init hashMap and list
-        for(int i = 0; i < 4; i++){
+        for(int i = 1; i < 5; i++){
             ColorBox cv = new ColorBox();
             tileColorViewMap.put(i,cv);
             colorViews.add(cv);
@@ -78,7 +80,6 @@ public class MindGameActivity extends AppCompatActivity implements OnAntEventLis
     @Override
     public void onMessageReceived(byte[] bytes, long l) {
         game.addEvent(bytes);
-
     }
 
     @Override
