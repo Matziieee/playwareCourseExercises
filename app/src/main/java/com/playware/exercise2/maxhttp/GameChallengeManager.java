@@ -12,6 +12,7 @@ import java.util.concurrent.ExecutionException;
 
 public class GameChallengeManager {
     public static String endpoint = "https://centerforplayware.com/api/index.php";
+    public static int GROUP_ID = 5001;
 
     public boolean postGameChallenge(String deviceToken, String gameId, String name) {
         RemoteHttpRequest requestPackage = new RemoteHttpRequest();
@@ -21,8 +22,8 @@ public class GameChallengeManager {
         requestPackage.setParam("device_token", deviceToken); // Your device token
         requestPackage.setParam("game_id",gameId); // The game ID (From the Game class > setGameId() function
         requestPackage.setParam("game_type_id", "1");// The game type ID (From the GameType class creation > first parameter)
-        requestPackage.setParam("challenger_name",name);
-        requestPackage.setParam("group_id", "5");// The challenger name
+        requestPackage.setParam("challenger_name",name);// The challenger name
+        requestPackage.setParam("group_id", ""+GROUP_ID);
 
 
         Downloader downloader = new Downloader(); //Instantiation of the Async task
@@ -34,6 +35,25 @@ public class GameChallengeManager {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public boolean postGameChallengeAccept(String token, GameChallenge gc){
+        RemoteHttpRequest requestPackage = new RemoteHttpRequest();
+        requestPackage.setMethod("POST");
+        requestPackage.setUrl(endpoint);
+        requestPackage.setParam("method","postGameChallengeAccept");
+        requestPackage.setParam("device_token", token); // Your device token
+        requestPackage.setParam("challenged_name", token); // The name of the person accepting the challenge
+        requestPackage.setParam("gcid", ""+gc.getGcid());
+        Downloader downloader = new Downloader(); //Instantiation of the Async task
+        try {
+            String result = downloader.execute(requestPackage).get();
+            JSONObject o = new JSONObject(result);
+            return o.getBoolean("response");
+        } catch (ExecutionException | InterruptedException | JSONException e) {
+            e.printStackTrace();
+        }
+        return false;// The game challenge id you want to accept
     }
 
     public boolean postGameChallengeAccept(String deviceToken, String id, String name) {
@@ -83,10 +103,13 @@ public class GameChallengeManager {
         for (int i = 0; i < challenges.length(); i++) {
             GameChallenge gc = new GameChallenge();
             JSONObject jObj = challenges.getJSONObject(i);
+            //if obj doesn't have our group id, skip it.
+            if(Integer.parseInt(jObj.getString("group_id")) != GROUP_ID) continue;
             //GCid
             gc.setGcid(Integer.parseInt(jObj.getString("gcid")));
             //token
             gc.setDeviceToken(jObj.getString("device_token"));
+            gc.setDeviceToken_c(jObj.getString("device_token_c"));
             //challenger name
             gc.setChallengerName(jObj.getString("challenger_name"));
             //challenged name

@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements OnAntEventListene
         connection.registerListener(MainActivity.this);
 
         //todo UNCOMMENT THIS
-        sound.initializeSounds(this);
+        //sound.initializeSounds(this);
 
         statusTextView = findViewById(R.id.statusTextView);
         pairingButton = findViewById(R.id.pairingButton);

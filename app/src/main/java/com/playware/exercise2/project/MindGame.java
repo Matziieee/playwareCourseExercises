@@ -79,6 +79,8 @@ public class MindGame extends Game {
 
 
     public void handlePress(int tile){
+        System.out.println("TILE CLICKED : " + tile);
+        System.out.println("SHOULD BE: "  +  currentTileClick.tile);
         if(tile == currentTileClick.tile){
             this.isCorrectPressed =  true;
         }

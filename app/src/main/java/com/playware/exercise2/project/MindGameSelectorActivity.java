@@ -25,7 +25,7 @@ public class MindGameSelectorActivity extends AppCompatActivity{
         //Add new views here for auto generated buttons
         games.put("Base Game", MindGameActivity.class);
         //Todo implement and add (some of) these?
-        //games.put("Challenge Viewer", ChallengeViewActivity) # View active challenges and accept them. Should allow for filtering maybe?
+        games.put("Challenge Viewer", ActiveChallengesActivity.class);
         //games.put("Stored Games", StoredGamesActivity) #Save each game played as .json on local storage?
         //games.put("High Score list", HighScoreActivity) #Shows High Scores for all players.
         //games.put("Time based game", MindGameWithTimeActivity.class)

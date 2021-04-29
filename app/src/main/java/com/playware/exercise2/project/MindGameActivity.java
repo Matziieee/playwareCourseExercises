@@ -2,6 +2,8 @@ package com.playware.exercise2.project;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,6 +27,7 @@ public class MindGameActivity extends AppCompatActivity implements OnAntEventLis
     ColorViewAdapter gridAdapter;
     GridView gridView;
     MindGame game;
+    boolean isChallenge = false;
 
     MotoConnection connection = MotoConnection.getInstance();
     MotoSound sound = MotoSound.getInstance();
@@ -41,8 +44,15 @@ public class MindGameActivity extends AppCompatActivity implements OnAntEventLis
     };
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        targetHandler.removeCallbacksAndMessages(null);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_mind_game);
         //Init UI elements
         levelText = findViewById(R.id.mindLevelText);
@@ -50,6 +60,10 @@ public class MindGameActivity extends AppCompatActivity implements OnAntEventLis
         initGrid();
         connection.registerListener(this);
         connection.setAllTilesToInit();
+        Bundle b = getIntent().getExtras();
+        if(b!= null){
+            isChallenge = true;
+        }
 
         game = new MindGame();
         game.setSelectedGameType(0);
@@ -71,7 +85,7 @@ public class MindGameActivity extends AppCompatActivity implements OnAntEventLis
         gridView.setAdapter(gridAdapter);
         gridView.setOnItemClickListener((parent, view, position, id) -> {
             if(game.isGameStarted){
-                game.handlePress(position);
+                game.handlePress(position+1);
             }
         });
         gridAdapter.notifyDataSetChanged();
@@ -130,7 +144,12 @@ public class MindGameActivity extends AppCompatActivity implements OnAntEventLis
                 }
             }
         });
-
+        if(isChallenge && false){
+            Intent resultIntent = new Intent();
+            resultIntent.putExtra("score", game.getPlayerScore()[0]);
+            setResult(Activity.RESULT_OK, resultIntent);
+            finish();
+        }
         gridAdapter.notifyDataSetChanged();
     }
 

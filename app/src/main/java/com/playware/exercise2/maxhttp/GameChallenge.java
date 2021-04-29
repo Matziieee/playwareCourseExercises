@@ -2,9 +2,12 @@ package com.playware.exercise2.maxhttp;
 
 import org.json.JSONArray;
 
-public class GameChallenge {
+import java.io.Serializable;
+
+public class GameChallenge implements Serializable {
     private int gcid;
     private String deviceToken;
+    private String deviceToken_c;
     private String challengerName;
     private String challengedName;
     private int gameId;
@@ -116,5 +119,13 @@ public class GameChallenge {
                 ", gameTypeId=" + gameTypeId +
                 ", cStatus=" + cStatus.getAsString() +
                 '}';
+    }
+
+    public String getDeviceToken_c() {
+        return deviceToken_c;
+    }
+
+    public void setDeviceToken_c(String deviceToken_c) {
+        this.deviceToken_c = deviceToken_c;
     }
 }
