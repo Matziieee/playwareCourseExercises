@@ -77,6 +77,7 @@ public class MindGameActivity extends AppCompatActivity implements OnAntEventLis
         scoreText = findViewById(R.id.mindScoreText);
         startGame = findViewById(R.id.startGameBtn);
 
+        startGame.setBackgroundColor(Color.BLUE);
 
         initGrid();
         connection.registerListener(this);

@@ -7,26 +7,37 @@
     tools:context=".project.MindGameActivity">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:id="@+id/linearLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/mindLevelText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Level: " />
+            android:text="Level: "
+            android:textColor="@color/black"
+            android:textSize="80dp" />
 
         <TextView
             android:id="@+id/mindScoreText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Score: " />
+            android:text="Score: "
+            android:textColor="@color/black"
+            android:textSize="80dp" />
+
         <Button
             android:id="@+id/startGameBtn"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Button" />
+            android:text="Next Level"
+            android:textSize="40dp" />
 
         <GridView
             android:id="@+id/gridView"
@@ -35,7 +46,7 @@
             android:layout_margin="10dp"
             android:horizontalSpacing="5dp"
             android:numColumns="2"
-            android:verticalSpacing="5dp" >
+            android:verticalSpacing="5dp">
 
 
         </GridView>

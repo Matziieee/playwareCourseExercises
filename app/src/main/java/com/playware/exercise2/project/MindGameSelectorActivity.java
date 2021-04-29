@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
@@ -41,6 +42,12 @@ public class MindGameSelectorActivity extends AppCompatActivity{
         games.forEach( (key,val) -> {
             TableRow r = new TableRow(this);
             Button b = new Button(this);
+
+            /*final RelativeLayout.LayoutParams rel_btn = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.FILL_PARENT,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT);
+            b.setLayoutParams(rel_btn);*/
+
             b.setText(key);
             b.setOnClickListener(v ->{
                 Intent i = new Intent(this, val);
