@@ -3,6 +3,9 @@ package com.playware.exercise2.project;
 import android.os.Build;
 import android.os.Handler;
 
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
+
 import com.livelife.motolibrary.AntData;
 import com.livelife.motolibrary.Game;
 import com.livelife.motolibrary.GameType;
@@ -22,8 +25,8 @@ import static com.livelife.motolibrary.AntData.LED_COLOR_RED;
 
 public class MindGame extends Game {
 
-    protected long BASE_TIME_VISIBLE_MS = 3000; // Each tile is visible for 3 seconds
-    protected long BASE_TIME_TO_CLICK_MS = 200000; //User has 100 seconds to click each tile, effectively making it not matter. Intended for this game mode.
+    protected long BASE_TIME_VISIBLE_MS = 2000; // Each tile is visible for 3 seconds
+    protected long BASE_TIME_TO_CLICK_MS = 5000; //User has 100 seconds to click each tile, effectively making it not matter. Intended for this game mode.
     /*
     Uncomment when using tiles*/
     MotoConnection motoConnection = MotoConnection.getInstance();
@@ -38,9 +41,12 @@ public class MindGame extends Game {
     boolean hasPressed = false;
     boolean isCorrectPressed = false;
     boolean shouldClear = false;
+    boolean isGameOver = false;
+    boolean startGame = false;
+
 
     //init random with a static seed for testing purposes. todo remove seed
-    public Random rand = new Random(123);
+    public Random rand = new Random();
 
     Handler handler = new Handler();
 
@@ -56,7 +62,7 @@ public class MindGame extends Game {
     @Override
     public void onGameStart() {
         super.onGameStart();
-        advanceGame();
+        //advanceGame();
     }
 
     @Override
@@ -74,7 +80,9 @@ public class MindGame extends Game {
     @Override
     public void onGameEnd() {
         super.onGameEnd();
+        isGameOver = true;
         //Save state
+
     }
 
 
@@ -100,6 +108,7 @@ public class MindGame extends Game {
 
     protected void showLevel(Level level){
         handler.postDelayed(new Runnable() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void run() {
                 motoConnection.setAllTilesIdle(0);
@@ -107,9 +116,9 @@ public class MindGame extends Game {
                     currentTileShown.color = 0;
                     currentTileShown = null;
                     isGameStarted = true;
-                    motoConnection.setAllTilesColor(LED_COLOR_GREEN);
                     sound.playStart();
                     currentTileClick = currentLevel.tileClicks.get(0);
+                    motoConnection.connectedTiles.forEach((tile)-> motoConnection.setAllTilesColor(LED_COLOR_GREEN));
                     return;
                 }
                 if(currentTileShown!= null){
@@ -153,11 +162,15 @@ public class MindGame extends Game {
 
                 //if correct press was last in level
                 if(currentLevel.tileClicks.indexOf(currentTileClick) == currentLevel.tileClicks.size()-1){
-                    advanceGame();
+                    startGame = true;
+                    motoConnection.connectedTiles.forEach((tile)-> motoConnection.setAllTilesColor(LED_COLOR_OFF));
+                    sound.speak("PRESS BUTTON TO CONTINUE");
+
                     return;
                 }
                 //make next tile new target
                 currentTileClick =currentLevel.tileClicks.get(currentLevel.tileClicks.indexOf(currentTileClick)+1);
+                motoConnection.connectedTiles.forEach((tile)-> motoConnection.setAllTilesColor(LED_COLOR_GREEN));
                 handler.postDelayed(this, 0);
             }
         },0);

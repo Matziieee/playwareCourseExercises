@@ -12,11 +12,11 @@
         android:layout_height="wrap_content"
         android:text="Hello World!"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.516"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.379" />
+        app:layout_constraintVertical_bias="0.318" />
 
     <Button
         android:id="@+id/pairingButton"
@@ -36,6 +36,56 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/statusTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/statusTextView"
+        app:layout_constraintVertical_bias="0.901" />
+
+    <Button
+        android:id="@+id/simulateGetGameSessions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Simulate Get Game Sessions"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.407" />
+
+
+    <Button
+        android:id="@+id/simulatePostGameSession"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Simulate Post Game Session"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.499" />
+
+    <Button
+        android:id="@+id/simulatePostGameChallenge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Simulate Get Game Sessions"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.507"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.597" />
+
+    <Button
+        android:id="@+id/simulateGetGameChallenge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Simulate Post Game Session"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.686" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -18,11 +18,15 @@
         <activity android:name=".PrettyListActivity" />
         <activity android:name=".HitTargetActivity" />
         <activity android:name=".AdaptiveGameActivity" />
+        <activity android:name=".AdaptiveGame2Activity" />
         <activity android:name=".FinalCountDownActivity" />
         <activity android:name=".GameSelectorActivity" />
         <activity android:name=".SpecialOneActivity" />
         <activity android:name=".ColourRaceActivity" />
+        <activity android:name=".MemoryGameActivity"/>
         <activity android:name=".MainActivity">
+
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

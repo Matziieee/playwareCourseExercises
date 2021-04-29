@@ -28,7 +28,8 @@ public class GameSelectorActivity extends AppCompatActivity {
         games.add(HitTargetActivity.class);
         games.add(PrettyListActivity.class);
         games.add(ChallengeActivity.class);
-        games.add(MindGameActivity.class);
+        games.add(MemoryGameActivity.class);
+        games.add(MindGameSelectorActivity.class);
     }
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override

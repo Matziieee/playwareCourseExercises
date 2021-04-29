@@ -22,6 +22,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Score: " />
+        <Button
+            android:id="@+id/startGameBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Button" />
 
         <GridView
             android:id="@+id/gridView"
@@ -30,7 +35,10 @@
             android:layout_margin="10dp"
             android:horizontalSpacing="5dp"
             android:numColumns="2"
-            android:verticalSpacing="5dp" />
+            android:verticalSpacing="5dp" >
+
+
+        </GridView>
 
     </LinearLayout>
 

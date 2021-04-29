@@ -27,7 +27,7 @@ public class PrettyListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pretty_list);
+        setContentView(R.layout.activity_mind_game);
         getSessionsBtn = findViewById(R.id.getSessionsBtn);
         postSessionBtn = findViewById(R.id.postSessionBtn);
         list = findViewById(R.id.sessionlist);
