@@ -40,6 +40,7 @@ public class ColourRaceActivity extends AppCompatActivity implements OnAntEventL
         colorRaceManager = new ColourRaceManager();
         gameTypeContainer = findViewById(R.id.gameTypeContainer);
 
+
         for (final GameType gt : colorRaceManager.getGameTypes()) {
             Button b = new Button(this);
             b.setText(gt.getName());

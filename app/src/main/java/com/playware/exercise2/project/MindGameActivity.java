@@ -1,15 +1,18 @@
 package com.playware.exercise2.project;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.hardware.camera2.params.ColorSpaceTransform;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.GridView;
 import android.widget.TextView;
+import android.widget.Button;
 
 import com.livelife.motolibrary.MotoConnection;
 import com.livelife.motolibrary.MotoSound;
@@ -22,6 +25,7 @@ import java.util.HashMap;
 public class MindGameActivity extends AppCompatActivity implements OnAntEventListener {
 
     TextView levelText,scoreText;
+    Button startGame;
     HashMap<Integer, ColorBox> tileColorViewMap = new HashMap<>();
     ArrayList<ColorBox> colorViews = new ArrayList<>();
     ColorViewAdapter gridAdapter;
@@ -42,6 +46,7 @@ public class MindGameActivity extends AppCompatActivity implements OnAntEventLis
             targetHandler.postDelayed(this,updateSpeed);
         }
     };
+    private boolean hasShownGameOverPrompt = false;
 
     @Override
     protected void onDestroy() {
@@ -57,6 +62,9 @@ public class MindGameActivity extends AppCompatActivity implements OnAntEventLis
         //Init UI elements
         levelText = findViewById(R.id.mindLevelText);
         scoreText = findViewById(R.id.mindScoreText);
+        startGame = findViewById(R.id.startGameBtn);
+
+
         initGrid();
         connection.registerListener(this);
         connection.setAllTilesToInit();
@@ -108,6 +116,26 @@ public class MindGameActivity extends AppCompatActivity implements OnAntEventLis
 
     private void updateUI(){
         runOnUiThread(() -> {
+
+            startGame.setOnClickListener((v) -> {
+                startGame.setEnabled(false);
+                game.startGame = false;
+                game.advanceGame();
+            });
+
+            if (game.startGame){
+                startGame.setEnabled(true);
+            }
+
+            if(game.isGameOver && !hasShownGameOverPrompt){
+                new AlertDialog.Builder(this.getApplicationContext())
+                        .setTitle("Do you want to ??sa")
+                        .setMessage("your score was: ")
+                        // A null listener allows the button to dismiss the dialog and take no further action.
+                        .setNegativeButton(android.R.string.no, null)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+            }
 
             if(game.shouldClear){
                 for(ColorBox b : tileColorViewMap.values()){
