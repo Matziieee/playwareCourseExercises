@@ -14,6 +14,48 @@ public class GameChallengeManager {
     public static String endpoint = "https://centerforplayware.com/api/index.php";
     public static int GROUP_ID = 5001;
 
+
+    public boolean deleteGameChallenge(String gcid, String token){
+        RemoteHttpRequest requestPackage = new RemoteHttpRequest();
+        requestPackage.setMethod("GET");
+        requestPackage.setUrl(endpoint);
+        requestPackage.setParam("method","deleteGameChallenge");
+        requestPackage.setParam("device_token", token);
+        requestPackage.setParam("group_id", ""+GROUP_ID);
+        requestPackage.setParam("gcid", gcid);
+        Downloader downloader = new Downloader(); //Instantiation of the Async task
+        try {
+            String result = downloader.execute(requestPackage).get();
+            JSONObject o = new JSONObject(result);
+            return o.getBoolean("response");
+        } catch (ExecutionException | InterruptedException | JSONException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    public boolean postGameChallenge(String deviceToken){
+        RemoteHttpRequest requestPackage = new RemoteHttpRequest();
+        requestPackage.setMethod("POST");
+        requestPackage.setUrl(endpoint);
+        requestPackage.setParam("method","postGameChallenge"); // The method name
+        requestPackage.setParam("device_token", deviceToken); // Your device token
+        requestPackage.setParam("game_id", "42069"); // The game ID (From the Game class > setGameId() function
+        requestPackage.setParam("game_type_id", "1");// The game type ID (From the GameType class creation > first parameter)
+        requestPackage.setParam("challenger_name", deviceToken);// The challenger name
+        requestPackage.setParam("group_id", ""+GROUP_ID);
+
+
+        Downloader downloader = new Downloader(); //Instantiation of the Async task
+        try {
+            String result = downloader.execute(requestPackage).get();
+            JSONObject o = new JSONObject(result);
+            return o.getBoolean("response");
+        } catch (ExecutionException | InterruptedException | JSONException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public boolean postGameChallenge(String deviceToken, String gameId, String name) {
         RemoteHttpRequest requestPackage = new RemoteHttpRequest();
         requestPackage.setMethod("POST");

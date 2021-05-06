@@ -45,7 +45,6 @@ public class MindGame extends Game {
     boolean startGame = false;
 
 
-    //init random with a static seed for testing purposes. todo remove seed
     public Random rand = new Random();
 
     Handler handler = new Handler();

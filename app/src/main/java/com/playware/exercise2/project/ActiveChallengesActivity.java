@@ -36,7 +36,7 @@ public class ActiveChallengesActivity extends AppCompatActivity {
     GameChallengeManager challengeManager;
     GameSessionManager sessionManager;
     SharedPreferences sharedPreferences;
-    Button updateChallengesBtn, getMyChallengesBtn;
+    Button updateChallengesBtn, getMyChallengesBtn, addChallBtn;
     TextView listTitle;
 
     ArrayList<GameChallenge> items = new ArrayList<>();
@@ -55,6 +55,7 @@ public class ActiveChallengesActivity extends AppCompatActivity {
         sharedPreferences = this.getApplicationContext().getSharedPreferences("PLAYWARE_COURSE", Context.MODE_PRIVATE);
         updateChallengesBtn = findViewById(R.id.getMGChallengesBtn);
         getMyChallengesBtn = findViewById(R.id.getMGMyChallengesBtn);
+        addChallBtn = findViewById(R.id.MGAddChallengeBtn);
         listTitle = findViewById(R.id.listStatusText);
 
         allChallengesListView = findViewById(R.id.MGChallengeList);
@@ -73,6 +74,23 @@ public class ActiveChallengesActivity extends AppCompatActivity {
         challengeManager = new GameChallengeManager();
         sessionManager = new GameSessionManager();
 
+        addChallBtn.setOnClickListener(v ->{
+            if(challengeManager.postGameChallenge(TokenManager.getDeviceToken(sharedPreferences))){
+                new AlertDialog.Builder(v.getContext())
+                        .setTitle("Created Challenge!")
+                        // A null listener allows the button to dismiss the dialog and take no further action.
+                        .setNegativeButton(android.R.string.no, null)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+            }else{
+                new AlertDialog.Builder(v.getContext())
+                        .setTitle("Failed to create challenge!")
+                        // A null listener allows the button to dismiss the dialog and take no further action.
+                        .setNegativeButton(android.R.string.no, null)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+            }
+        });
         updateChallengesBtn.setOnClickListener(v -> {
             flipVisibleLists(true);
             listTitle.setText("Showing all newly created challenges");
@@ -81,10 +99,12 @@ public class ActiveChallengesActivity extends AppCompatActivity {
             serializedAllChallenges.clear();
             ArrayList<GameChallenge> toAdd = challengeManager.getGameChallenges(TokenManager.getDeviceToken(sharedPreferences));
             if(toAdd != null){
-                for (int i = 0; i < toAdd.size(); i++) {
-                    if (isStatusCreated(toAdd.get(i))) {
-                        items.add(toAdd.get(i));
-                        challengesMap.put(i, toAdd.get(i));
+                int i = 0;
+                for(GameChallenge gc : toAdd){
+                    if (isStatusCreated(gc)) {
+                        items.add(gc);
+                        challengesMap.put(i,gc);
+                        i++;
                     }
                 }
                 serializedAllChallenges.addAll(this.getChallengesAsStrings());
@@ -134,6 +154,25 @@ public class ActiveChallengesActivity extends AppCompatActivity {
                         startActivityForResult(i, 1111);
                     })
                     .setNegativeButton("Cancel", (dialog, which) -> dialog.cancel())
+                    .setNeutralButton("Delete Challenge", (dialog, which) -> {
+                        String token = TokenManager.getDeviceToken(sharedPreferences);
+                        if(this.challengeManager.deleteGameChallenge(""+myChallengesMap.get(position).getGcid(), token)){
+                            updateMyChallenges();
+                            new AlertDialog.Builder(view.getContext())
+                                    .setTitle("Deleted Challenge!")
+                                    // A null listener allows the button to dismiss the dialog and take no further action.
+                                    .setNegativeButton(android.R.string.no, null)
+                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                    .show();
+                        }else{
+                            new AlertDialog.Builder(view.getContext())
+                                    .setTitle("Failed to delete challenge!")
+                                    // A null listener allows the button to dismiss the dialog and take no further action.
+                                    .setNegativeButton(android.R.string.no, null)
+                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                    .show();
+                        }
+                    })
                     .show();
         });
     }
@@ -141,6 +180,7 @@ public class ActiveChallengesActivity extends AppCompatActivity {
     private void postGameSessionResult(GameChallenge gc, int score, String token){
         GameSessionPostRequest req = new GameSessionPostRequest(""+gc.getGameId(), ""+gc.getGameTypeId(), ""+score, "-1", "4",gc.getGcid());
         if(sessionManager.postGameSession(req,token)){
+            updateMyChallenges();
             new AlertDialog.Builder(this)
                     .setTitle("Successfully submitted result!")
                     // A null listener allows the button to dismiss the dialog and take no further action.
@@ -184,7 +224,11 @@ public class ActiveChallengesActivity extends AppCompatActivity {
     }
     private ArrayList<String> getChallengesAsStrings(){
         ArrayList<String> list = new ArrayList<>();
+        String me = TokenManager.getDeviceToken(sharedPreferences);
         for (GameChallenge c : this.items){
+            if(me.equals(c.getDeviceToken())) {
+                c.setChallengerName("Me");
+            }
             list.add(c.toString());
         }
         return list;
@@ -193,6 +237,12 @@ public class ActiveChallengesActivity extends AppCompatActivity {
     private ArrayList<String> getMyChallengesAsStrings(){
         ArrayList<String> list = new ArrayList<>();
         for (GameChallenge c : this.items){
+            String me = TokenManager.getDeviceToken(sharedPreferences);
+            if(me.equals(c.getDeviceToken())){
+                c.setChallengerName("Me");
+            }else{
+                c.setChallengedName("Me");
+            }
             list.add(c.toString() + getHighScores(c));
         }
         return list;
@@ -225,16 +275,18 @@ public class ActiveChallengesActivity extends AppCompatActivity {
     }
     private void updateMyChallenges(){
         flipVisibleLists(false);
-        listTitle.setText("Showing all your active challenges");
+        listTitle.setText("Showing all your challenges");
         myChallengesMap.clear();
         items.clear();
         serializedMyChallenges.clear();
         ArrayList<GameChallenge> toAdd =  challengeManager.getGameChallenges(TokenManager.getDeviceToken(sharedPreferences));
         if(toAdd != null){
-            for (int i = 0; i < toAdd.size(); i++) {
-                if (isMyChallenge(toAdd.get(i))) {
-                    items.add(toAdd.get(i));
-                    myChallengesMap.put(i, toAdd.get(i));
+            int i = 0;
+            for(GameChallenge gc : toAdd){
+                if (isMyChallenge(gc)) {
+                    items.add(gc);
+                    myChallengesMap.put(i, gc);
+                    i++;
                 }
             }
             serializedMyChallenges.addAll(this.getMyChallengesAsStrings());

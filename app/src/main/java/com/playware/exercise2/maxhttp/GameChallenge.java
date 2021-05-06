@@ -16,7 +16,7 @@ public class GameChallenge implements Serializable {
     private ChallengeStatus cStatus;
     private String createdDate;
     private String updatedDate;
-    private JSONArray summaryObject;
+    private transient JSONArray summaryObject;
 
     public JSONArray getSummaryObject() {
         return summaryObject;
@@ -111,9 +111,11 @@ public class GameChallenge implements Serializable {
 
     @Override
     public String toString() {
-        return "GameType: " + getGameTypeId() + "\n" +
+        return  "Challenge ID: " + getGcid() + "\n" +
+                "GameType: " + getGameTypeId() + "\n" +
                 "Challenger: " + getChallengerName() + "\n" +
-                "Challenged: " + getChallengedName() + "\n";
+                "Challenged: " + getChallengedName() + "\n" +
+                "Status: " + getcStatus().getAsString() + "\n";
     }
 
     private String gameType(){
