@@ -43,7 +43,7 @@ public class MindGame extends Game {
     boolean shouldClear = false;
     boolean isGameOver = false;
     boolean startGame = false;
-
+    boolean isNormalMode = true;
 
     public Random rand = new Random();
 
@@ -54,14 +54,17 @@ public class MindGame extends Game {
     public MindGame(){
         setName("Mind Game");
         setDescription("something something");
-        addGameType(new GameType(0, GameType.GAME_TYPE_SCORE, 100000, "No time limit",1));
+        //Set scores unreasonably high because we don't use this at all.
+        addGameType(new GameType(0, GameType.GAME_TYPE_SCORE, 100000, "Normal",1));
+        addGameType(new GameType(1, GameType.GAME_TYPE_SCORE, 100000, "Hard",1));
         levels = new ArrayList<>();
     }
 
     @Override
     public void onGameStart() {
         super.onGameStart();
-        //advanceGame();
+        //true if normal mode, false if hard mode.
+        this.isNormalMode = this.selectedGameType.getTypeId() == 0;
     }
 
     @Override
@@ -80,8 +83,6 @@ public class MindGame extends Game {
     public void onGameEnd() {
         super.onGameEnd();
         isGameOver = true;
-        //Save state
-
     }
 
 
@@ -126,7 +127,10 @@ public class MindGame extends Game {
                     currentTileShown.color = 0;
                 }
                 currentTileShown = level.tileClicks.get(level.currentClickNum);
-                motoConnection.setTileColor(currentTileShown.color, currentTileShown.tile);
+                //Only set color if we are in normal mode.
+                if(isNormalMode){
+                    motoConnection.setTileColor(currentTileShown.color, currentTileShown.tile);
+                }
                 level.currentClickNum++;
                 handler.postDelayed(this, currentTileShown.timeVisibleMs);
             }
@@ -134,7 +138,6 @@ public class MindGame extends Game {
     }
 
     protected void playLevel(Level currentLevel, MindGame game){
-
         // Game loop runnable
         handler.postDelayed(new Runnable() {
             @Override
@@ -216,7 +219,6 @@ public class MindGame extends Game {
     }
 
     private void endGame(){
-        System.out.println("GAME ENDED");
         sound.speak("Game over");
         handler.removeCallbacksAndMessages(null);
         this.stopGame();

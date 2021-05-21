@@ -24,7 +24,6 @@
         <activity android:name=".GameSelectorActivity" />
         <activity android:name=".SpecialOneActivity" />
         <activity android:name=".ColourRaceActivity" />
-        <activity android:name=".MemoryGameActivity"/>
         <activity android:name=".MainActivity">
 
 

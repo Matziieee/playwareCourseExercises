@@ -37,6 +37,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="Next Level"
+            android:backgroundTint="@android:color/holo_green_dark"
             android:textSize="40dp" />
 
         <GridView

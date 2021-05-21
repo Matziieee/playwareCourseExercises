@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.session.MediaSession;
@@ -47,6 +48,8 @@ public class ActiveChallengesActivity extends AppCompatActivity {
     ArrayAdapter<String> allChallengesAdapter, myChallengesAdapter;
     ListView allChallengesListView, myChallengesListView;
 
+    int selectedMode = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,21 +78,33 @@ public class ActiveChallengesActivity extends AppCompatActivity {
         sessionManager = new GameSessionManager();
 
         addChallBtn.setOnClickListener(v ->{
-            if(challengeManager.postGameChallenge(TokenManager.getDeviceToken(sharedPreferences))){
-                new AlertDialog.Builder(v.getContext())
-                        .setTitle("Created Challenge!")
-                        // A null listener allows the button to dismiss the dialog and take no further action.
-                        .setNegativeButton(android.R.string.no, null)
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
-            }else{
-                new AlertDialog.Builder(v.getContext())
-                        .setTitle("Failed to create challenge!")
-                        // A null listener allows the button to dismiss the dialog and take no further action.
-                        .setNegativeButton(android.R.string.no, null)
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
-            }
+            selectedMode = 0;
+            new AlertDialog.Builder(v.getContext())
+
+                    .setSingleChoiceItems(new CharSequence[]{"Normal", "Hard"},0, (dialog, which) -> {
+                        selectedMode = which;
+                    })
+                    // A null listener allows the button to dismiss the dialog and take no further action.
+                    .setNegativeButton(android.R.string.no, null)
+                    .setPositiveButton("Create Challenge", (dialog,v1) ->{
+                        if(challengeManager.postGameChallenge(TokenManager.getDeviceToken(sharedPreferences), selectedMode)){
+                            new AlertDialog.Builder(v.getContext())
+                                .setTitle("Created Challenge successfully!")
+                                .setNegativeButton(android.R.string.no, null)
+                                .show();
+                        }else{
+                            new AlertDialog.Builder(v.getContext())
+                                    .setTitle("Failed to create challenge!")
+                                    // A null listener allows the button to dismiss the dialog and take no further action.
+                                    .setNegativeButton(android.R.string.no, null)
+                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                    .show();
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+
+
         });
         updateChallengesBtn.setOnClickListener(v -> {
             flipVisibleLists(true);
@@ -161,7 +176,7 @@ public class ActiveChallengesActivity extends AppCompatActivity {
                             new AlertDialog.Builder(view.getContext())
                                     .setTitle("Deleted Challenge!")
                                     // A null listener allows the button to dismiss the dialog and take no further action.
-                                    .setNegativeButton(android.R.string.no, null)
+                                    .setNegativeButton("Ok", null)
                                     .setIcon(android.R.drawable.ic_dialog_alert)
                                     .show();
                         }else{

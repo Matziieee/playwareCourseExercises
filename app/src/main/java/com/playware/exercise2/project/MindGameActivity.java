@@ -83,9 +83,18 @@ public class MindGameActivity extends AppCompatActivity implements OnAntEventLis
         connection.registerListener(this);
         connection.setAllTilesToInit();
         Bundle b = getIntent().getExtras();
+        game = new MindGame();
         if(b!= null){
-            isChallenge = true;
-            challenge = (GameChallenge) b.get("challenge");
+            if(b.get("challenge") != null){
+                isChallenge = true;
+                challenge = (GameChallenge) b.get("challenge");
+                game.setSelectedGameType(challenge.getGameTypeId());
+            }
+            else{
+               int mode = (int) b.get("mode");
+               game.setSelectedGameType(mode);
+            }
+
         }
 
         startGame.setOnClickListener((v) -> {
@@ -94,8 +103,6 @@ public class MindGameActivity extends AppCompatActivity implements OnAntEventLis
             game.advanceGame();
         });
 
-        game = new MindGame();
-        game.setSelectedGameType(0);
         game.startGame();
         targetHandler.postDelayed(uiHandler,updateSpeed);
     }

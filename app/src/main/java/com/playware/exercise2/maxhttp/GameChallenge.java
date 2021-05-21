@@ -112,17 +112,17 @@ public class GameChallenge implements Serializable {
     @Override
     public String toString() {
         return  "Challenge ID: " + getGcid() + "\n" +
-                "GameType: " + getGameTypeId() + "\n" +
+                "GameType: " + gameType() + "\n" +
                 "Challenger: " + getChallengerName() + "\n" +
                 "Challenged: " + getChallengedName() + "\n" +
                 "Status: " + getcStatus().getAsString() + "\n";
     }
 
     private String gameType(){
-        if(this.getGameTypeId() == 1){
-            return "Basic";
-        }else if(this.getGameTypeId() == 2){
-            return "Time";
+        if(this.getGameTypeId() == 0){
+            return "Normal";
+        }else if(this.getGameTypeId() == 1){
+            return "Hard";
         }
         return "Unknown";
     }

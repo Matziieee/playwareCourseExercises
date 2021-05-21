@@ -19,42 +19,32 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MindGameSelectorActivity extends AppCompatActivity{
-    HashMap<String, Class> games = new HashMap<>();
-    TableLayout layout;
-
-    public MindGameSelectorActivity(){
-        //Add new views here for auto generated buttons
-        games.put("Base Game", MindGameActivity.class);
-        //Todo implement and add (some of) these?
-        games.put("Challenge Viewer", ActiveChallengesActivity.class);
-        //games.put("Stored Games", StoredGamesActivity) #Save each game played as .json on local storage?
-        //games.put("High Score list", HighScoreActivity) #Shows High Scores for all players.
-        //games.put("Time based game", MindGameWithTimeActivity.class)
-        //Other views/game types?
-    }
+    Button normalBtn, hardBtn, challengesBtn;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mind_game_selector);
-        layout = findViewById(R.id.mindGameSelectorTable);
-        games.forEach( (key,val) -> {
-            TableRow r = new TableRow(this);
-            Button b = new Button(this);
+        normalBtn = findViewById(R.id.normalBtn);
+        hardBtn = findViewById(R.id.hardBtn);
+        challengesBtn = findViewById(R.id.challViewerBtn);
 
-            /*final RelativeLayout.LayoutParams rel_btn = new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.FILL_PARENT,
-                    RelativeLayout.LayoutParams.WRAP_CONTENT);
-            b.setLayoutParams(rel_btn);*/
+        normalBtn.setOnClickListener(v -> {
+            Intent i = new Intent(this, MindGameActivity.class);
+            i.putExtra("mode", 0);
+            startActivity(i);
+        });
 
-            b.setText(key);
-            b.setOnClickListener(v ->{
-                Intent i = new Intent(this, val);
-                startActivity(i);
-            });
-            r.addView(b);
-            layout.addView(r);
+        hardBtn.setOnClickListener(v -> {
+            Intent i = new Intent(this, MindGameActivity.class);
+            i.putExtra("mode", 1);
+            startActivity(i);
+        });
+
+        challengesBtn.setOnClickListener(v -> {
+            Intent i = new Intent(this, ActiveChallengesActivity.class);
+            startActivity(i);
         });
     }
 }

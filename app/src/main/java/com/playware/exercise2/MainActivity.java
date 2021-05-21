@@ -15,6 +15,7 @@ import com.livelife.motolibrary.MotoConnection;
 import com.livelife.motolibrary.MotoSound;
 import com.livelife.motolibrary.OnAntEventListener;
 import com.livelife.motolibrary.AntData;
+import com.playware.exercise2.project.MindGameSelectorActivity;
 
 import android.os.AsyncTask;
 import android.os.Debug;
@@ -42,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements OnAntEventListene
 
     MotoConnection connection = MotoConnection.getInstance();
     MotoSound sound = MotoSound.getInstance();
-    Button pairingButton, startGameButton;
+    Button pairingButton, startGameButton, startMindGameBtn;
 
     boolean isPairing;
     TextView statusTextView;
@@ -61,16 +62,21 @@ public class MainActivity extends AppCompatActivity implements OnAntEventListene
         connection.setDeviceId(4);              //Your group number
         connection.registerListener(MainActivity.this);
 
-        //todo UNCOMMENT THIS
         sound.initializeSounds(this);
 
         statusTextView = findViewById(R.id.statusTextView);
         pairingButton = findViewById(R.id.pairingButton);
+        startMindGameBtn = findViewById(R.id.mindGameBtn);
         startGameButton = findViewById(R.id.startGameButton);
 
         startGameButton.setOnClickListener(v -> {
             connection.unregisterListener(MainActivity.this);
             Intent i = new Intent(MainActivity.this, GameSelectorActivity.class);
+            startActivity(i);
+        });
+        startMindGameBtn.setOnClickListener(v -> {
+            connection.unregisterListener(MainActivity.this);
+            Intent i = new Intent(MainActivity.this, MindGameSelectorActivity.class);
             startActivity(i);
         });
 

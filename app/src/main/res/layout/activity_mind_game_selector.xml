@@ -5,9 +5,37 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".project.MindGameSelectorActivity">
-    <TableLayout
-        android:id="@+id/mindGameSelectorTable"
-        android:textSize="64dp"
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/normalBtn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:backgroundTint="@android:color/holo_green_dark"
+            android:layout_weight="1"
+            android:text="Normal Mode Practice "
+            />
+
+        <Button
+            android:id="@+id/hardBtn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:backgroundTint="@android:color/holo_green_dark"
+            android:layout_weight="1"
+            android:text="Hard Mode Practice" />
+
+        <Button
+            android:id="@+id/challViewerBtn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:backgroundTint="@android:color/holo_green_dark"
+            android:layout_weight="1"
+            android:text="View Challenges" />
+
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
