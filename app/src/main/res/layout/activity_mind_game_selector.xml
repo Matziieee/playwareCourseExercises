@@ -11,22 +11,53 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/normalBtn"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:backgroundTint="@android:color/holo_green_dark"
             android:layout_weight="1"
-            android:text="Normal Mode Practice "
-            />
+            android:orientation="vertical">
+            <Button
+                android:id="@+id/normalBtn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:backgroundTint="@android:color/holo_green_dark"
+                android:layout_weight="1"
+                android:text="Normal Mode Practice "
+                />
 
-        <Button
-            android:id="@+id/hardBtn"
+            <Button
+                android:id="@+id/hardBtn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:backgroundTint="@android:color/holo_green_dark"
+                android:layout_weight="1"
+                android:text="Hard Mode Practice" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:backgroundTint="@android:color/holo_green_dark"
             android:layout_weight="1"
-            android:text="Hard Mode Practice" />
+            android:orientation="vertical">
+            <Button
+                android:id="@+id/normalTimeBtn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:backgroundTint="@android:color/holo_green_dark"
+                android:layout_weight="1"
+                android:text="Normal Time Mode Practice" />
+            <Button
+                android:id="@+id/hardTimeBtn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:backgroundTint="@android:color/holo_green_dark"
+                android:layout_weight="1"
+                android:text="Hard Time Mode Practice" />
+        </LinearLayout>
+
+
 
         <Button
             android:id="@+id/challViewerBtn"

@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 
 public class ColorBox{
     private int currentColor;
+    private int alpha = 255;
 
     public ColorBox() {
         currentColor = Color.WHITE;
@@ -22,5 +23,13 @@ public class ColorBox{
 
     public void setCurrentColor(int currentColor) {
         this.currentColor = currentColor;
+    }
+
+    public int getAlpha() {
+        return alpha;
+    }
+
+    public void setAlpha(int alpha) {
+        this.alpha = alpha;
     }
 }

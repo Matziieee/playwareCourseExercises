@@ -36,7 +36,7 @@ public class ColorViewAdapter extends ArrayAdapter {
         LayoutInflater inflater = context.getLayoutInflater();
         convertView = inflater.inflate(R.layout.color_view_frame,null);
         convertView.setBackgroundColor(boxes.get(position).getCurrentColor());
-
+        convertView.getBackground().setAlpha(boxes.get(position).getAlpha());
         return convertView;
     }
 }

@@ -81,7 +81,7 @@ public class ActiveChallengesActivity extends AppCompatActivity {
             selectedMode = 0;
             new AlertDialog.Builder(v.getContext())
 
-                    .setSingleChoiceItems(new CharSequence[]{"Normal", "Hard"},0, (dialog, which) -> {
+                    .setSingleChoiceItems(new CharSequence[]{"Normal", "Hard", "Normal Time", "Hard Time"},0, (dialog, which) -> {
                         selectedMode = which;
                     })
                     // A null listener allows the button to dismiss the dialog and take no further action.

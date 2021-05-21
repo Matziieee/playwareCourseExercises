@@ -26,10 +26,10 @@ import static com.livelife.motolibrary.AntData.LED_COLOR_RED;
 public class MindGame extends Game {
 
     protected long BASE_TIME_VISIBLE_MS = 2000; // Each tile is visible for 3 seconds
-    protected long BASE_TIME_TO_CLICK_MS = 5000; //User has 100 seconds to click each tile, effectively making it not matter. Intended for this game mode.
+    protected long BASE_TIME_TO_CLICK_MS = 1000; //User has 100 seconds to click each tile, effectively making it not matter. Intended for this game mode.
     /*
     Uncomment when using tiles*/
-    MotoConnection motoConnection = MotoConnection.getInstance();
+    MotoConnection motoConnection;
     MotoSound sound = MotoSound.getInstance(); /**/
 
     ArrayList<Level> levels;
@@ -43,7 +43,6 @@ public class MindGame extends Game {
     boolean shouldClear = false;
     boolean isGameOver = false;
     boolean startGame = false;
-    boolean isNormalMode = true;
 
     public Random rand = new Random();
 
@@ -57,14 +56,15 @@ public class MindGame extends Game {
         //Set scores unreasonably high because we don't use this at all.
         addGameType(new GameType(0, GameType.GAME_TYPE_SCORE, 100000, "Normal",1));
         addGameType(new GameType(1, GameType.GAME_TYPE_SCORE, 100000, "Hard",1));
+        addGameType(new GameType(2, GameType.GAME_TYPE_SCORE, 100000, "Normal Time Attack",1));
+        addGameType(new GameType(3, GameType.GAME_TYPE_SCORE, 100000, "Hard Time Attack",1));
         levels = new ArrayList<>();
+        motoConnection = MotoConnection.getInstance();
     }
 
     @Override
     public void onGameStart() {
         super.onGameStart();
-        //true if normal mode, false if hard mode.
-        this.isNormalMode = this.selectedGameType.getTypeId() == 0;
     }
 
     @Override
@@ -117,10 +117,7 @@ public class MindGame extends Game {
                 if(level.currentClickNum == level.size){
                     currentTileShown.color = 0;
                     currentTileShown = null;
-                    isGameStarted = true;
-                    sound.playStart();
-                    currentTileClick = currentLevel.tileClicks.get(0);
-                    motoConnection.connectedTiles.forEach((tile)-> motoConnection.setAllTilesColor(LED_COLOR_GREEN));
+                    playLevel(currentLevel);
                     return;
                 }
                 if(currentTileShown!= null){
@@ -128,7 +125,7 @@ public class MindGame extends Game {
                 }
                 currentTileShown = level.tileClicks.get(level.currentClickNum);
                 //Only set color if we are in normal mode.
-                if(isNormalMode){
+                if(selectedGameType.getTypeId() == 0 || selectedGameType.getTypeId() == 2){
                     motoConnection.setTileColor(currentTileShown.color, currentTileShown.tile);
                 }
                 level.currentClickNum++;
@@ -137,47 +134,58 @@ public class MindGame extends Game {
         }, 0);
     }
 
-    protected void playLevel(Level currentLevel, MindGame game){
+    protected void playLevel(Level currentLevel){
         // Game loop runnable
+        isGameStarted = true;
+        sound.playStart();
+        currentTileClick = currentLevel.tileClicks.get(0);
+        setGameOngoingTileColor();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 //If level is still being shown to user, do nothing.
-                if(!isGameStarted || startGame){
+                /*if(!isGameStarted || startGame){
                     handler.postDelayed(this, 100);
                     return;
-                }
-                //Start new runnable that asserts user presses within time limit
-                //handler.postDelayed(withinTimeRunnable, currentTileClick.timeToPressMs);
-
+                }*/
                 //wait for user to press...
                 if(!hasPressed && !isCorrectPressed){
-                    handler.postDelayed(this, 20);
+                    handler.postDelayed(this, 10);
                     return;
                 }
 
                 sound.playMatched();
-                handler.removeCallbacks(withinTimeRunnable);
                 hasPressed = false;
                 isCorrectPressed = false;
 
                 //increment score and expect next input
-                game.incrementPlayerScore(1, 0);
+                incrementScore();
 
                 //if correct press was last in level
                 if(currentLevel.tileClicks.indexOf(currentTileClick) == currentLevel.tileClicks.size()-1){
-                    startGame = true;
-                    motoConnection.connectedTiles.forEach((tile)-> motoConnection.setAllTilesColor(LED_COLOR_OFF));
-                    sound.speak("PRESS BUTTON TO CONTINUE");
-
+                    finishLevel();
                     return;
                 }
                 //make next tile new target
-                currentTileClick =currentLevel.tileClicks.get(currentLevel.tileClicks.indexOf(currentTileClick)+1);
-                motoConnection.connectedTiles.forEach((tile)-> motoConnection.setAllTilesColor(LED_COLOR_GREEN));
+                currentTileClick = currentLevel.tileClicks.get(currentLevel.tileClicks.indexOf(currentTileClick)+1);
+                setGameOngoingTileColor();
                 handler.postDelayed(this, 0);
             }
         },0);
+    }
+
+    protected void finishLevel(){
+        startGame = true;
+        motoConnection.setAllTilesColor(LED_COLOR_OFF);
+        sound.speak("PRESS BUTTON TO CONTINUE");
+    }
+
+    private void incrementScore(){
+        this.incrementPlayerScore(1, 0);
+    }
+
+    protected void setGameOngoingTileColor(){
+        motoConnection.setAllTilesColor(LED_COLOR_GREEN);
     }
 
     protected TileClick generateTileClick(){
@@ -215,23 +223,16 @@ public class MindGame extends Game {
         this.isGameStarted = false;
         this.generateLevel();
         showLevel(this.currentLevel);
-        playLevel(this.currentLevel,this);
     }
 
-    private void endGame(){
+    protected void endGame(){
         sound.speak("Game over");
         handler.removeCallbacksAndMessages(null);
-        this.stopGame();
         motoConnection.setAllTilesIdle(LED_COLOR_RED);
-        currentLevel.tileClicks.forEach((tc) -> tc.color = 0);
-    }
-
-    Runnable withinTimeRunnable = new Runnable() {
-        @Override
-        public void run() {
-            //if this runs, user has failed.
-            endGame();
+        for (TileClick tc : currentLevel.tileClicks) {
+            tc.color = 0;
         }
-    };
+        this.stopGame();
+    }
 
 }

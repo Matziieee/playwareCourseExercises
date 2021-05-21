@@ -1,20 +1,16 @@
 package com.playware.exercise2.project;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
-import android.hardware.camera2.params.ColorSpaceTransform;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Button;
 
-import com.livelife.motolibrary.Game;
 import com.livelife.motolibrary.MotoConnection;
 import com.livelife.motolibrary.MotoSound;
 import com.livelife.motolibrary.OnAntEventListener;
@@ -41,7 +37,7 @@ public class MindGameActivity extends AppCompatActivity implements OnAntEventLis
 
 
     Handler targetHandler = new Handler();
-    long updateSpeed = 100;
+    long updateSpeed = 25;
     Runnable uiHandler = new Runnable() {
         @Override
         public void run() {
@@ -65,6 +61,7 @@ public class MindGameActivity extends AppCompatActivity implements OnAntEventLis
     protected void onDestroy() {
         super.onDestroy();
         targetHandler.removeCallbacksAndMessages(null);
+        sound.speak("Your score was " + game.getPlayerScore()[0]);
     }
 
     @Override
@@ -83,15 +80,17 @@ public class MindGameActivity extends AppCompatActivity implements OnAntEventLis
         connection.registerListener(this);
         connection.setAllTilesToInit();
         Bundle b = getIntent().getExtras();
-        game = new MindGame();
+
         if(b!= null){
             if(b.get("challenge") != null){
                 isChallenge = true;
                 challenge = (GameChallenge) b.get("challenge");
+                game = challenge.getGameTypeId() > 1 ? new TimeMindGame() : new MindGame();
                 game.setSelectedGameType(challenge.getGameTypeId());
             }
             else{
                int mode = (int) b.get("mode");
+               game = mode > 1 ? new TimeMindGame() : new MindGame();
                game.setSelectedGameType(mode);
             }
 
@@ -119,11 +118,13 @@ public class MindGameActivity extends AppCompatActivity implements OnAntEventLis
         gridAdapter = new ColorViewAdapter(this, android.R.layout.simple_list_item_1,colorViews);
         gridView = findViewById(R.id.gridView);
         gridView.setAdapter(gridAdapter);
+
         gridView.setOnItemClickListener((parent, view, position, id) -> {
-            if(game.isGameStarted){
+            if(game.isGameStarted && !game.startGame){
                 game.handlePress(position+1);
             }
         });
+
         gridAdapter.notifyDataSetChanged();
     }
 
@@ -179,15 +180,21 @@ public class MindGameActivity extends AppCompatActivity implements OnAntEventLis
             // VISUALIZE PLAY PHASE
             if(game.isGameStarted) {
                 for(ColorBox b : tileColorViewMap.values()){
-                    b.setCurrentColor(Color.YELLOW);
+                    b.setCurrentColor(Color.GREEN);
+                    if(game.selectedGameType.getTypeId() > 1){
+                        TimeMindGame tmp = (TimeMindGame) game;
+                        b.setAlpha(tmp.timeLeftAlpha);
+                    }
                 }
             }
         });
-        if(isChallenge && game.isGameOver){
-            Intent resultIntent = new Intent();
-            resultIntent.putExtra("score", game.getPlayerScore()[0]);
-            resultIntent.putExtra("challenge", challenge);
-            setResult(Activity.RESULT_OK, resultIntent);
+        if(game.isGameOver){
+            if(isChallenge){
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra("score", game.getPlayerScore()[0]);
+                resultIntent.putExtra("challenge", challenge);
+                setResult(Activity.RESULT_OK, resultIntent);
+            }
             finish();
         }
         gridAdapter.notifyDataSetChanged();

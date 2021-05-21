@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MindGameSelectorActivity extends AppCompatActivity{
-    Button normalBtn, hardBtn, challengesBtn;
+    Button normalBtn, hardBtn, challengesBtn, normaTimelBtn, hardTimeBtn;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -28,6 +28,8 @@ public class MindGameSelectorActivity extends AppCompatActivity{
         setContentView(R.layout.activity_mind_game_selector);
         normalBtn = findViewById(R.id.normalBtn);
         hardBtn = findViewById(R.id.hardBtn);
+        normaTimelBtn = findViewById(R.id.normalTimeBtn);
+        hardTimeBtn = findViewById(R.id.hardTimeBtn);
         challengesBtn = findViewById(R.id.challViewerBtn);
 
         normalBtn.setOnClickListener(v -> {
@@ -39,6 +41,18 @@ public class MindGameSelectorActivity extends AppCompatActivity{
         hardBtn.setOnClickListener(v -> {
             Intent i = new Intent(this, MindGameActivity.class);
             i.putExtra("mode", 1);
+            startActivity(i);
+        });
+
+        normaTimelBtn.setOnClickListener(v -> {
+            Intent i = new Intent(this, MindGameActivity.class);
+            i.putExtra("mode", 2);
+            startActivity(i);
+        });
+
+        hardTimeBtn.setOnClickListener(v -> {
+            Intent i = new Intent(this, MindGameActivity.class);
+            i.putExtra("mode", 3);
             startActivity(i);
         });
 
