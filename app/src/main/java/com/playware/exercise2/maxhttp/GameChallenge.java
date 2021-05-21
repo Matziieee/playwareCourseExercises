@@ -119,12 +119,18 @@ public class GameChallenge implements Serializable {
     }
 
     private String gameType(){
-        if(this.getGameTypeId() == 0){
-            return "Normal";
-        }else if(this.getGameTypeId() == 1){
-            return "Hard";
+        switch (this.getGameTypeId()){
+            case 0:
+                return "Normal";
+            case 1:
+                return "Hard";
+            case 2:
+                return "Normal Time";
+            case 3:
+                return "Hard Time";
+            default:
+                return "Unknown";
         }
-        return "Unknown";
     }
 
     public String getDeviceToken_c() {
