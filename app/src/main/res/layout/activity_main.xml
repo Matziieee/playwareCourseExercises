@@ -36,14 +36,6 @@
             android:backgroundTint="@android:color/holo_green_dark"
             android:layout_weight="1"
             android:text="Exercises" />
-
-        <Button
-            android:id="@+id/mindGameBtn"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:backgroundTint="@android:color/holo_green_dark"
-            android:layout_weight="1"
-            android:text="Memory Game" />
     </LinearLayout>
 
 

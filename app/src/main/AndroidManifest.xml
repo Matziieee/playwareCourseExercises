@@ -12,20 +12,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Exercise2">
-        <activity android:name=".project.ActiveChallengesActivity"></activity>
-        <activity android:name=".project.MindGameSelectorActivity" />
-        <activity android:name=".project.MindGameActivity" />
-        <activity android:name=".ChallengeActivity" />
+        <activity android:name=".ActiveChallengesActivity" />
         <activity android:name=".PrettyListActivity" />
-        <activity android:name=".HitTargetActivity" />
-        <activity android:name=".AdaptiveGameActivity" />
-        <activity android:name=".AdaptiveGame2Activity" />
-        <activity android:name=".FinalCountDownActivity" />
         <activity android:name=".GameSelectorActivity" />
-        <activity android:name=".SpecialOneActivity" />
-        <activity android:name=".ColourRaceActivity" />
-        <activity android:name=".MainActivity">
-
+        <activity android:name=".MainActivity"
+            android:exported="true">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

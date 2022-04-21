@@ -9,10 +9,6 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
-
-import com.playware.exercise2.project.MindGameActivity;
-import com.playware.exercise2.project.MindGameSelectorActivity;
-
 import java.util.ArrayList;
 
 public class GameSelectorActivity extends AppCompatActivity {
@@ -20,14 +16,8 @@ public class GameSelectorActivity extends AppCompatActivity {
     TableLayout layout;
 
     public GameSelectorActivity (){
-        games.add(ColourRaceActivity.class);
-        games.add(SpecialOneActivity.class);
-        games.add(FinalCountDownActivity.class);
-        games.add(AdaptiveGameActivity.class);
-        games.add(AdaptiveGame2Activity.class);
-        games.add(HitTargetActivity.class);
         games.add(PrettyListActivity.class);
-        games.add(ChallengeActivity.class);
+        games.add(ActiveChallengesActivity.class);
     }
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override

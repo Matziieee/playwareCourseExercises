@@ -1,4 +1,4 @@
-package com.playware.exercise2.project;
+package com.playware.exercise2;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -160,14 +160,6 @@ public class ActiveChallengesActivity extends AppCompatActivity {
         myChallengesListView.setOnItemClickListener((parent, view, position, id) -> {
             new AlertDialog.Builder(view.getContext())
                     .setTitle("Attempt this challenge?")
-                    .setPositiveButton("Start Game", (dialog, which) -> {
-                        //Start
-                        Intent i = new Intent(this, MindGameActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("challenge", myChallengesMap.get(position));
-                        i.putExtras(bundle);
-                        startActivityForResult(i, 1111);
-                    })
                     .setNegativeButton("Cancel", (dialog, which) -> dialog.cancel())
                     .setNeutralButton("Delete Challenge", (dialog, which) -> {
                         String token = TokenManager.getDeviceToken(sharedPreferences);
